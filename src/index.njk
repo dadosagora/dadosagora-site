@@ -23,7 +23,7 @@ layout: layout.njk
 <p id="result"></p>
 
 <script>
-const rates = {{ rates | dump }};
+const rates = {{ rates | dump | safe }};
 document.getElementById('convert').addEventListener('click', () => {
   const amt = parseFloat(document.getElementById('amount').value) || 0;
   const cur = document.getElementById('currency').value;
