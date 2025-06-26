@@ -1,10 +1,10 @@
 module.exports = function (eleventyConfig) {
   return {
     dir: {
-      input: "src",         // onde estão seus arquivos .njk, .css, etc
-      includes: "_includes", // subpasta de "src" que contém os layouts
-      data: "_data",         // subpasta de "src" com os dados (como rates.json)
-      output: "_site"        // pasta gerada com o build final
+      input: "src",        // todos os arquivos fonte estão em src/
+      includes: "_includes", // layouts ficam em src/_includes
+      data: "_data",         // dados (JSON, JS) em src/_data
+      output: "_site"        // pasta de saída
     }
   };
 };
