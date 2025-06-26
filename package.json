@@ -1,0 +1,11 @@
+{
+  "name": "dadosagora",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npx @11ty/eleventy"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.1"
+  }
+}
