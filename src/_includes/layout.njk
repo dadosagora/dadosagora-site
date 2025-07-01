@@ -4,19 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% if title %}{{ title }} | {% endif %}DadosAgora</title>
-  <link rel="stylesheet" href="/styles.css">
+  <!-- PicoCSS via CDN -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+  <!-- Seu CSS extra -->
+  <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
-  <header>
-    <h1><a href="/">DadosAgora</a></h1>
-  </header>
+  <main class="container">
 
-  <main>
+    <header>
+      <h1><a href="/">DadosAgora</a></h1>
+    </header>
+
     {{ content | safe }}
-  </main>
 
- <footer>
-  <p>&copy; 2025 DadosAgora</p>
-</footer>
+    <footer>
+      <p>&copy; 2025 DadosAgora</p>
+    </footer>
+
+  </main>
 </body>
 </html>
