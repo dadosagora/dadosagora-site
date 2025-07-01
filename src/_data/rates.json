@@ -1,14 +1,16 @@
-{
-  "USDBRL": {
-    "bid": "0"
-  },
-  "EURBRL": {
-    "bid": "0"
-  },
-  "ARSBRL": {
-    "bid": "0"
-  },
-  "BTCBRL": {
-    "bid": "0"
-  }
+// src/_data/rates.js
+import fetch from "node-fetch";
+
+export default async function () {
+  const url =
+    "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,ARS-BRL,BTC-BRL";
+  const res = await fetch(url);
+  const json = await res.json();
+
+  return {
+    USDBRL: +json.USDBRL.bid,
+    EURBRL: +json.EURBRL.bid,
+    ARSBRL: +json.ARSBRL.bid,
+    BTCBRL: +json.BTCBRL.bid,
+  };
 }
