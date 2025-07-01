@@ -5,15 +5,15 @@ layout: layout.njk
 
 <h2>Cotações agora</h2>
 <ul>
-  <li>Dólar: R$ {{ rates.USDBRL | round(2) }}</li>
-  <li>Euro: R$ {{ rates.EURBRL  | round(2) }}</li>
-  <li>Peso Argentino: R$ {{ rates.ARSBRL | round(4) }}</li>
-  <li>Libra: R$ {{ rates.GBPBRL | round(2) }}</li>
-  <li>Dólar Canadense: R$ {{ rates.CADBRL | round(2) }}</li>
-  <li>Dólar Australiano: R$ {{ rates.AUDBRL | round(2) }}</li>
-  <li>Franco Suíço: R$ {{ rates.CHFBRL | round(2) }}</li>
-  <li>Iene: R$ {{ rates.JPYBRL | round(4) }}</li>
-  <li>Bitcoin: R$ {{ rates.BTCBRL | round(0) | toLocaleString('pt-BR') }}</li>
+ <li>Dólar: R$ {{ rates.USDBRL | number(2, "pt-BR") }}</li>
+<li>Euro: R$ {{ rates.EURBRL | number(2, "pt-BR") }}</li>
+<li>Peso Argentino: R$ {{ rates.ARSBRL | number(4, "pt-BR") }}</li>
+<li>Libra: R$ {{ rates.GBPBRL | number(2, "pt-BR") }}</li>
+<li>Dólar Canadense: R$ {{ rates.CADBRL | number(2, "pt-BR") }}</li>
+<li>Dólar Australiano: R$ {{ rates.AUDBRL | number(2, "pt-BR") }}</li>
+<li>Franco Suíço: R$ {{ rates.CHFBRL | number(2, "pt-BR") }}</li>
+<li>Iene: R$ {{ rates.JPYBRL | number(4, "pt-BR") }}</li>
+<li>Bitcoin: R$ {{ rates.BTCBRL | number(6, "pt-BR") }}</li>
 </ul>
 <p class="small">Fonte: <a href="https://docs.awesomeapi.com.br/api-de-moedas" target="_blank">AwesomeAPI</a></p>
 
