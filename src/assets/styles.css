@@ -1,0 +1,9 @@
+/* Deixa a lista e o resultado um pouco mais juntos */
+ul { margin-bottom: 0.5rem; }
+.small { font-size: .875rem; color: #666; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem 1rem;
+}
