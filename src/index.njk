@@ -76,3 +76,9 @@ layout: layout.njk
       symbol + " " + final.toLocaleString("pt-BR",{minimumFractionDigits:2});
   };
 </script>
+
+<li>Libra: R$ {{ rates.GBPBRL | round(2) }}</li>
+<li>Dólar Canadense: R$ {{ rates.CADBRL | round(2) }}</li>
+<li>Dólar Australiano: R$ {{ rates.AUDBRL | round(2) }}</li>
+<li>Franco Suíço: R$ {{ rates.CHFBRL | round(2) }}</li>
+<li>Iene: R$ {{ rates.JPYBRL | round(4) }}</li>
