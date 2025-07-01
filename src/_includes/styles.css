@@ -4,3 +4,9 @@ h1 a { text-decoration: none; color: var(--pico-primary); }
 h1 a:hover { text-decoration: underline; }
 ul { margin-left: 1.25rem; }
 #result { font-weight: bold; font-size: 1.1rem; }
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.75rem 1rem;
+}
+.small{font-size:.875rem;color:#666}
