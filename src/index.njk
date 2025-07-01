@@ -7,34 +7,72 @@ layout: layout.njk
 <ul>
   <li>Dólar: R$ {{ rates.USDBRL | round(2) }}</li>
   <li>Euro: R$ {{ rates.EURBRL  | round(2) }}</li>
-  <li>Peso Argentino: R$ {{ rates.ARSBRL | round(2) }}</li>
-  <li>Bitcoin: R$ {{ rates.BTCBRL | round(0) }}</li>
+  <li>Peso Argentino: R$ {{ rates.ARSBRL | round(4) }}</li>
+  <li>Bitcoin: R$ {{ rates.BTCBRL | round(0) | toLocaleString('pt-BR') }}</li>
 </ul>
+<p class="small">Fonte: <a href="https://docs.awesomeapi.com.br/api-de-moedas"
+          target="_blank">AwesomeAPI</a></p>
 
 <h2>Conversor de valores</h2>
+
 <label for="amount">Valor:</label>
 <input id="amount" type="number" step="0.01" min="0" value="100">
 
-<select id="currency">
-  <option value="USDBRL">Dólar (USD)</option>
-  <option value="EURBRL">Euro (EUR)</option>
-  <option value="ARSBRL">Peso (ARS)</option>
-  <option value="BTCBRL">Bitcoin (BTC)</option>
-</select>
+<div class="grid">
+  <div>
+    <label for="from">De:</label>
+    <select id="from">
+      <option value="USDBRL">Dólar (USD)</option>
+      <option value="EURBRL">Euro  (EUR)</option>
+      <option value="ARSBRL">Peso  (ARS)</option>
+      <option value="BTCBRL">Bitcoin (BTC)</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="to">Para:</label>
+    <select id="to">
+      <option value="BRL">Real (BRL)</option>
+      <option value="USDBRL">Dólar (USD)</option>
+      <option value="EURBRL">Euro  (EUR)</option>
+      <option value="ARSBRL">Peso  (ARS)</option>
+      <option value="BTCBRL">Bitcoin (BTC)</option>
+    </select>
+  </div>
+</div>
 
 <button id="convert">Converter</button>
-
-<p id="result">R$ 0,00</p>
+<p id="result" class="lead">R$ 0,00</p>
 
 <script>
-  const rates  = {{ rates | dump | safe }};
-  const amount = document.getElementById("amount");
-  const curr   = document.getElementById("currency");
-  const out    = document.getElementById("result");
+  const ratesBRL = {{ rates | dump | safe }};   // cotações BRL
+
+  // helper para obter cotação de QUALQUER → BRL
+  function toBRL(code){
+    return code === "BRL" ? 1 : ratesBRL[code];
+  }
+
+  const amt = document.getElementById("amount");
+  const selFrom = document.getElementById("from");
+  const selTo   = document.getElementById("to");
+  const out = document.getElementById("result");
+
   document.getElementById("convert").onclick = () => {
-    const key = curr.value;
-    const val = parseFloat(amount.value || 0);
-    const brl = val * rates[key];
-    out.textContent = "R$ " + brl.toLocaleString("pt-BR",{minimumFractionDigits:2});
+    const v   = parseFloat(amt.value || 0);
+    const src = selFrom.value;
+    const dst = selTo.value;
+
+    // valor em BRL, depois para destino
+    const brl = v * toBRL(src);
+    const final = dst === "BRL" ? brl : brl / toBRL(dst);
+
+    const symbol = dst === "BRL" ? "R$"
+      : dst === "USDBRL" ? "US$"
+      : dst === "EURBRL" ? "€"
+      : dst === "ARSBRL" ? "ARS$"
+      : "₿";
+
+    out.textContent =
+      symbol + " " + final.toLocaleString("pt-BR",{minimumFractionDigits:2});
   };
 </script>
