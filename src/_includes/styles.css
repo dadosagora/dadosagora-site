@@ -1,12 +1,15 @@
-/* ajustes finos sobre o PicoCSS */
-body { padding-top: 2rem; }
-h1 a { text-decoration: none; color: var(--pico-primary); }
-h1 a:hover { text-decoration: underline; }
-ul { margin-left: 1.25rem; }
-#result { font-weight: bold; font-size: 1.1rem; }
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:.75rem 1rem;
+/* ----- Destaque para o resultado do conversor ----- */
+#result {
+  font-size: 2rem;          /* bem maior */
+  font-weight: 700;         /* grosso */
+  color: var(--pico-primary); /* usa a cor principal do PicoCSS */
+  margin-top: 0.75rem;        /* afastado do botão */
+  display: block;             /* quebra de linha garantida */
 }
-.small{font-size:.875rem;color:#666}
+
+/* em telas muito pequenas, diminui um pouco para caber */
+@media (max-width: 480px) {
+  #result {
+    font-size: 1.5rem;
+  }
+}
