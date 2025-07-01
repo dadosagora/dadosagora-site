@@ -1,1 +1,6 @@
-body{font-family:Arial,Helvetica,sans-serif;max-width:800px;margin:auto;padding:1rem;} header h1 a{text-decoration:none;color:#00838F}
+/* ajustes finos sobre o PicoCSS */
+body { padding-top: 2rem; }
+h1 a { text-decoration: none; color: var(--pico-primary); }
+h1 a:hover { text-decoration: underline; }
+ul { margin-left: 1.25rem; }
+#result { font-weight: bold; font-size: 1.1rem; }
