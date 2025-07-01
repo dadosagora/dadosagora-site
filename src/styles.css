@@ -1,0 +1,15 @@
+/* ----- Destaque para o resultado do conversor ----- */
+#result {
+  font-size: 2rem;          /* bem maior */
+  font-weight: 700;         /* grosso */
+  color: var(--pico-primary); /* usa a cor principal do PicoCSS */
+  margin-top: 0.75rem;        /* afastado do botão */
+  display: block;             /* quebra de linha garantida */
+}
+
+/* em telas muito pequenas, diminui um pouco para caber */
+@media (max-width: 480px) {
+  #result {
+    font-size: 1.5rem;
+  }
+}
