@@ -17,6 +17,8 @@ module.exports = function (eleventyConfig) {
   /* Se já havia outras configurações, mantenha aqui ↓ */
   // Copia estáticos
   eleventyConfig.addPassthroughCopy("src/assets");
+  eleventyConfig.addPassthroughCopy("src/styles.css");
+
 
   return {
     dir: {
