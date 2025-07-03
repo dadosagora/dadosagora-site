@@ -1,35 +1,49 @@
-/* ---------------- Navegação ---------------- */
-.menu{
-  display:flex;
-  gap:.75rem;
-  list-style:none;
-  margin:0 0 1rem 0;
-  padding:0;
-}
-.menu a{
-  text-decoration:none;
-  color:var(--pico-primary);
-  font-size:.9rem;
-}
-.menu a:hover{
-  text-decoration:underline;
+/* Estilo base para o layout */
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-/* ---------- Destaque do valor convertido ---------- */
-#result{
-  margin-top:1.5rem;
-  font-size:3rem;      /* bem grande */
-  font-weight:700;     /* negrito   */
-  color:#0070f3;       /* azul      */
-  text-align:center;
+/* Espaçamento entre os campos do formulário */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-/* Caixa da fórmula */
-#formula{
-  font-size:.9rem;
-  color:#555;
-  background:#f2f2f2;
-  padding:.75rem;
-  border-radius:6px;
-  margin-top:.5rem;
+.grid > div {
+  flex: 1 1 200px;
 }
+
+/* Resultado da conversão com destaque */
+#result {
+  margin-top: 1.5rem;
+  font-size: 3rem;         /* Maior */
+  font-weight: 700;        /* Negrito */
+  color: #0070f3 !important; /* Azul */
+  text-align: center;
+}
+
+/* Estilo do bloco de explicação da fórmula */
+#explanation {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #555;
+  background-color: #f4f4f4;
+  padding: 1rem;
+  border-left: 4px solid #0070f3;
+  border-radius: 4px;
+}
+
+/* Links no rodapé */
+footer a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
