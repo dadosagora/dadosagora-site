@@ -5,13 +5,13 @@ layout: layout.njk
 
 <h2>Conversor de Temperatura</h2>
 
-<label for="temperature">Valor:</label>
-<input id="temperature" type="number" step="0.01" value="0">
+<label for="tempVal">Valor:</label>
+<input id="tempVal" type="number" step="0.01" value="0">
 
 <div class="grid">
   <div>
-    <label for="from">De:</label>
-    <select id="from">
+    <label for="tempFrom">De:</label>
+    <select id="tempFrom">
       <option value="C">Celsius (°C)</option>
       <option value="F">Fahrenheit (°F)</option>
       <option value="K">Kelvin (K)</option>
@@ -19,8 +19,8 @@ layout: layout.njk
   </div>
 
   <div>
-    <label for="to">Para:</label>
-    <select id="to">
+    <label for="tempTo">Para:</label>
+    <select id="tempTo">
       <option value="C">Celsius (°C)</option>
       <option value="F">Fahrenheit (°F)</option>
       <option value="K">Kelvin (K)</option>
@@ -28,69 +28,66 @@ layout: layout.njk
   </div>
 </div>
 
-<button id="convert">Converter</button>
-<p id="result">0,00</p>
-<div id="explanation"></div>
+<!-- Extras para sensação térmica -->
+<label for="wind">Vento&nbsp;(km/h):</label>
+<input id="wind" type="number" step="0.1" value="10">
+
+<label for="rh">Umidade&nbsp;(%):</label>
+<input id="rh" type="number" step="1" value="50" min="0" max="100">
+
+<button id="btnTemp">Converter</button>
+
+<p id="tempResult" class="lead">0,00</p>
+<p id="sensacao" class="lead"></p>
+<p id="tempFormula"></p>
 
 <script>
-  function convertTemperature(value, from, to) {
-    let celsius;
+/* ---------- Conversão básica ---------- */
+function conv(v, from, to){
+  let c = from==="C"? v : from==="F"? (v-32)/1.8 : v-273.15;
+  return to==="C"? c : to==="F"? c*1.8+32 : c+273.15;
+}
 
-    if (from === "C") {
-      celsius = value;
-    } else if (from === "F") {
-      celsius = (value - 32) / 1.8;
-    } else if (from === "K") {
-      celsius = value - 273.15;
+/* ---------- Sensação térmica ---------- */
+function windChill(tC, vento){ // °C e km/h
+  return 13.12 + 0.6215*tC - 11.37*Math.pow(vento,0.16) + 0.3965*tC*Math.pow(vento,0.16);
+}
+function heatIndex(tC, rh){   // °C e %
+  const tF = tC*1.8+32;
+  const hiF = -42.379 + 2.04901523*tF + 10.14333127*rh
+              - 0.22475541*tF*rh - 6.83783e-3*Math.pow(tF,2)
+              - 5.481717e-2*Math.pow(rh,2) + 1.22874e-3*Math.pow(tF,2)*rh
+              + 8.5282e-4*tF*Math.pow(rh,2) - 1.99e-6*Math.pow(tF,2)*Math.pow(rh,2);
+  return (hiF-32)/1.8; // volta p/ °C
+}
+
+const fmt = n => n.toLocaleString("pt-BR",{minimumFractionDigits:2});
+
+btnTemp.onclick = ()=>{
+  const v  = parseFloat(tempVal.value);
+  const f  = tempFrom.value;
+  const t  = tempTo.value;
+  const w  = parseFloat(wind.value);
+  const rh = parseFloat(rh.value);
+
+  const res = conv(v,f,t);
+  tempResult.textContent = fmt(res) + " " + (t==="C"?"°C":t==="F"?"°F":"K");
+
+  /* Fórmula da conversão base */
+  tempFormula.textContent = `${fmt(v)} ${f} → ${fmt(res)} ${t}`;
+
+  /* ---------- Sensação térmica ---------- */
+  let sensMsg = "";
+  if(t==="C"){  // mostramos em °C
+    if(res<=10 && w>=4.8){
+      const wc = windChill(res,w);
+      sensMsg = `Sensação térmica (wind-chill): ${fmt(wc)} °C`;
+    }else if(res>=27 && rh>=40){
+      const hi = heatIndex(res,rh);
+      sensMsg = `Sensação térmica (heat-index): ${fmt(hi)} °C`;
     }
-
-    let result;
-    if (to === "C") {
-      result = celsius;
-    } else if (to === "F") {
-      result = celsius * 1.8 + 32;
-    } else if (to === "K") {
-      result = celsius + 273.15;
-    }
-
-    return result;
   }
-
-  function explainFormula(value, from, to, result) {
-    const v = parseFloat(value);
-    let explanation = "";
-
-    if (from === "C" && to === "F") {
-      explanation = `(${v} × 1.8) + 32 = ${result.toFixed(2)} °F`;
-    } else if (from === "F" && to === "C") {
-      explanation = `(${v} − 32) ÷ 1.8 = ${result.toFixed(2)} °C`;
-    } else if (from === "C" && to === "K") {
-      explanation = `${v} + 273.15 = ${result.toFixed(2)} K`;
-    } else if (from === "K" && to === "C") {
-      explanation = `${v} − 273.15 = ${result.toFixed(2)} °C`;
-    } else if (from === "F" && to === "K") {
-      explanation = `Primeiro convertemos para °C: (${v} − 32) ÷ 1.8 = ${( (v - 32)/1.8 ).toFixed(2)} °C<br>
-                     Depois para K: +273.15 = ${result.toFixed(2)} K`;
-    } else if (from === "K" && to === "F") {
-      explanation = `Primeiro convertemos para °C: ${v} − 273.15 = ${(v - 273.15).toFixed(2)} °C<br>
-                     Depois para °F: ×1.8 +32 = ${result.toFixed(2)} °F`;
-    } else {
-      explanation = "Valor original e final são iguais.";
-    }
-
-    return explanation;
-  }
-
-  document.getElementById("convert").onclick = () => {
-    const value = document.getElementById("temperature").value;
-    const from  = document.getElementById("from").value;
-    const to    = document.getElementById("to").value;
-
-    const result = convertTemperature(value, from, to);
-    document.getElementById("result").textContent =
-      result.toFixed(2) + (to === "C" ? " °C" : to === "F" ? " °F" : " K");
-
-    document.getElementById("explanation").innerHTML =
-      "<strong>Como foi calculado:</strong><br>" + explainFormula(value, from, to, result);
-  };
+  sensacao.textContent = sensMsg;
+};
 </script>
+
