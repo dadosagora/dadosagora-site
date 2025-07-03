@@ -1,0 +1,77 @@
+---
+title: Conversor de Distância
+layout: layout.njk
+---
+
+<h2>Conversor de Distância</h2>
+
+<div class="grid">
+  <div>
+    <label for="distance">Valor:</label>
+    <input id="distance" type="number" step="0.01" min="0" value="1">
+  </div>
+
+  <div>
+    <label for="from">De:</label>
+    <select id="from">
+      <option value="km">Quilômetro (km)</option>
+      <option value="m">Metro (m)</option>
+      <option value="cm">Centímetro (cm)</option>
+      <option value="mi">Milha (mi)</option>
+      <option value="yd">Jarda (yd)</option>
+      <option value="ft">Pé (ft)</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="to">Para:</label>
+    <select id="to">
+      <option value="km">Quilômetro (km)</option>
+      <option value="m">Metro (m)</option>
+      <option value="cm">Centímetro (cm)</option>
+      <option value="mi">Milha (mi)</option>
+      <option value="yd">Jarda (yd)</option>
+      <option value="ft">Pé (ft)</option>
+    </select>
+  </div>
+</div>
+
+<button id="convert">Converter</button>
+<p id="result">0</p>
+<div id="explanation"></div>
+
+<script>
+  const conversionRates = {
+    km: 1000,
+    m: 1,
+    cm: 0.01,
+    mi: 1609.34,
+    yd: 0.9144,
+    ft: 0.3048
+  };
+
+  const convertBtn = document.getElementById("convert");
+  const result = document.getElementById("result");
+  const explanation = document.getElementById("explanation");
+
+  convertBtn.onclick = () => {
+    const value = parseFloat(document.getElementById("distance").value);
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+
+    if (isNaN(value)) return;
+
+    const meters = value * conversionRates[from];
+    const final = meters / conversionRates[to];
+
+    result.textContent = final.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 6
+    }) + " " + to;
+
+    explanation.innerHTML =
+      `<strong>Fórmula usada:</strong><br>` +
+      `${value} ${from} × ${conversionRates[from]} = ${meters} m<br>` +
+      `${meters} ÷ ${conversionRates[to]} = ${final.toFixed(6)} ${to}`;
+  };
+</script>
