@@ -5,15 +5,15 @@ layout: layout.njk
 
 <h2>Cotações agora</h2>
 <ul>
- <li>Dólar: R$ {{ rates.USDBRL | number(2, "pt-BR") }}</li>
-<li>Euro: R$ {{ rates.EURBRL | number(2, "pt-BR") }}</li>
-<li>Peso Argentino: R$ {{ rates.ARSBRL | number(4, "pt-BR") }}</li>
-<li>Libra: R$ {{ rates.GBPBRL | number(2, "pt-BR") }}</li>
-<li>Dólar Canadense: R$ {{ rates.CADBRL | number(2, "pt-BR") }}</li>
-<li>Dólar Australiano: R$ {{ rates.AUDBRL | number(2, "pt-BR") }}</li>
-<li>Franco Suíço: R$ {{ rates.CHFBRL | number(2, "pt-BR") }}</li>
-<li>Iene: R$ {{ rates.JPYBRL | number(4, "pt-BR") }}</li>
-<li>Bitcoin: R$ {{ rates.BTCBRL | number(6, "pt-BR") }}</li>
+  <li>Dólar: R$ {{ rates.USDBRL | number(2, "pt-BR") }}</li>
+  <li>Euro: R$ {{ rates.EURBRL | number(2, "pt-BR") }}</li>
+  <li>Peso Argentino: R$ {{ rates.ARSBRL | number(4, "pt-BR") }}</li>
+  <li>Libra: R$ {{ rates.GBPBRL | number(2, "pt-BR") }}</li>
+  <li>Dólar Canadense: R$ {{ rates.CADBRL | number(2, "pt-BR") }}</li>
+  <li>Dólar Australiano: R$ {{ rates.AUDBRL | number(2, "pt-BR") }}</li>
+  <li>Franco Suíço: R$ {{ rates.CHFBRL | number(2, "pt-BR") }}</li>
+  <li>Iene: R$ {{ rates.JPYBRL | number(4, "pt-BR") }}</li>
+  <li>Bitcoin: R$ {{ rates.BTCBRL | number(6, "pt-BR") }}</li>
 </ul>
 <p class="small">Fonte: <a href="https://docs.awesomeapi.com.br/api-de-moedas" target="_blank">AwesomeAPI</a></p>
 
@@ -57,15 +57,20 @@ layout: layout.njk
 </div>
 
 <button id="convert">Converter</button>
+
+<!-- resultado e explicação -->
 <p id="result" class="lead">R$ 0,00</p>
+<p id="formula"></p>
 
 <script>
   const ratesBRL = {{ rates | dump | safe }};
 
+  // Cotação em BRL
   function toBRL(code){
     return code === "BRL" ? 1 : ratesBRL[code];
   }
 
+  // Símbolo de cada moeda
   function symbol(code){
     const map = {
       BRL:"R$", USDBRL:"US$", EURBRL:"€", ARSBRL:"ARS$",
@@ -76,14 +81,25 @@ layout: layout.njk
   }
 
   document.getElementById("convert").onclick = () => {
-    const v   = parseFloat(document.getElementById("amount").value || 0);
-    const src = document.getElementById("from").value;
-    const dst = document.getElementById("to").value;
+    const amount = parseFloat(document.getElementById("amount").value || 0);
+    const src    = document.getElementById("from").value;
+    const dst    = document.getElementById("to").value;
 
-    const brl   = v * toBRL(src);       // valor em BRL
-    const final = dst === "BRL" ? brl : brl / toBRL(dst);
+    const srcRate = toBRL(src);
+    const dstRate = toBRL(dst);
 
+    // valor em BRL e valor final
+    const brl   = amount * srcRate;
+    const final = dst === "BRL" ? brl : brl / dstRate;
+
+    // mostra resultado
     document.getElementById("result").textContent =
       symbol(dst) + " " + final.toLocaleString("pt-BR",{minimumFractionDigits:2});
+
+    // mostra fórmula
+    document.getElementById("formula").innerHTML =
+      `<strong>Fórmula:</strong> ${symbol(src)} ${amount} × ${srcRate.toFixed(4)} ` +
+      `${dst !== "BRL" ? "÷ " + dstRate.toFixed(4) : ""} = ` +
+      `${symbol(dst)} ${final.toLocaleString("pt-BR",{minimumFractionDigits:2})}`;
   };
 </script>
