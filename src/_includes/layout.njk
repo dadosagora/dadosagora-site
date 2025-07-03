@@ -1,39 +1,32 @@
-<!-- src/_includes/layout.njk -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  {# –– BLOCO DE SEO –– #}
+  <!-- SEO Básico -->
+  <title>{% if title %}{{ title }} | ConvertePraMim{% else %}ConvertePraMim - Conversores inteligentes para o dia a dia{% endif %}</title>
+  <meta name="description" content="{% if description %}{{ description }}{% else %}Converta valores de temperatura, peso, volume, distância e muito mais em tempo real com praticidade.{% endif %}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="ConvertePraMim">
+  <meta name="robots" content="index, follow">
 
-  <title>{% if title %}{{ title }} | {% endif %}ConvertePraMim</title>
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="{% if title %}{{ title }} | ConvertePraMim{% else %}ConvertePraMim - Conversores úteis{% endif %}">
+  <meta property="og:description" content="{% if description %}{{ description }}{% else %}Converta valores rapidamente e com precisão.{% endif %}">
+  <meta property="og:url"         content="https://convertepramim.com.br">
+  <meta property="og:image"       content="https://convertepramim.com.br/assets/img/og-image.png">
 
-  <link rel="stylesheet"
-        href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="{% if title %}{{ title }} | ConvertePraMim{% else %}ConvertePraMim{% endif %}">
+  <meta name="twitter:description" content="{% if description %}{{ description }}{% else %}Conversores práticos para o seu dia a dia.{% endif %}">
+  <meta name="twitter:image"       content="https://convertepramim.com.br/assets/img/og-image.png">
+
+  {# –– LINKS DE ESTILO –– #}
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-
-  <header class="container">
-    <nav>
-      <ul class="menu">
-        <li><a href="/">Moedas</a></li>
-        <li><a href="/temperatura/">Temperatura</a></li>
-        <li><a href="/distancia/">Distância</a></li>
-        <li><a href="/peso/">Peso</a></li>
-        <li><a href="/volume/">Volume</a></li>
-        <li><a href="/tempo/">Tempo</a></li>
-      </ul>
-    </nav>
-
-    <h1><a href="/" style="text-decoration:none">ConvertePraMim</a></h1>
-  </header>
-
-  <main class="container">
-    {{ content | safe }}
-  </main>
-
-  <footer class="container">
-    <p>&copy; 2025 ConvertePraMim</p>
-  </footer>
+  <!-- … restante do layout … -->
 </body>
 </html>
