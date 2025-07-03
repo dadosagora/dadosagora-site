@@ -13,3 +13,11 @@
   border-radius: 6px;
   margin-top: 0.5rem;
 }
+
+/* ---------- Destaque para o valor convertido ---------- */
+#result{
+  margin-top: 1.2rem;     /* espaço acima */
+  font-size: 2.25rem;     /* bem maior */
+  font-weight: 700;       /* negrito forte */
+  line-height: 1.2;
+}
