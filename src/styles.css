@@ -74,3 +74,14 @@ footer a:hover {
   color:#c62828; /* vermelho suave */
   margin-top:.25rem;
 }
+
+/* ---- resultado grande para conversão & sensação térmica ---- */
+.bigResult{
+  margin-top:1rem;
+  font-size:3rem;
+  font-weight:700;
+  color:#0070f3;
+  text-align:center;
+}
+/* opcional: texto explicativo menor */
+.small{font-size:.85rem;color:#555;}
