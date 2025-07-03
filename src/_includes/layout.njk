@@ -1,41 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-  <!-- Destaque para o valor convertido -->
-  <style>
-    #result{
-      margin-top:1.5rem;
-      font-size:3rem;        /* maior */
-      font-weight:700;       /* negrito */
-      color:#0070f3!important;/* azul   */
-      text-align:center;
-    }
-  </style>
-</head>
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>{% if title %}{{ title }} | {% endif %}DadosAgora</title>
-  <!-- PicoCSS via CDN -->
+
+  <!-- PicoCSS (estilo base) -->
   <link rel="stylesheet"
         href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+
   <!-- Seu CSS extra -->
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+
+  <header class="container">
+    <!-- --- MENU --- -->
+    <nav>
+      <ul class="menu">
+        <li><a href="/">Moedas</a></li>
+        <li><a href="/temperatura/">Temperatura</a></li>
+        <li><a href="/distancia/">Distância</a></li>
+        <li><a href="/peso/">Peso</a></li>
+        <li><a href="/volume/">Volume</a></li>
+      </ul>
+    </nav>
+
+    <h1><a href="/" style="text-decoration:none">DadosAgora</a></h1>
+  </header>
+
   <main class="container">
-
-    <header>
-      <h1><a href="/">DadosAgora</a></h1>
-    </header>
-
     {{ content | safe }}
-
-    <footer>
-      <p>&copy; 2025 DadosAgora</p>
-    </footer>
-
   </main>
+
+  <footer class="container">
+    <p>&copy; 2025 DadosAgora</p>
+  </footer>
+
 </body>
 </html>
