@@ -1,0 +1,96 @@
+---
+title: Conversor de Temperatura
+layout: layout.njk
+---
+
+<h2>Conversor de Temperatura</h2>
+
+<label for="temperature">Valor:</label>
+<input id="temperature" type="number" step="0.01" value="0">
+
+<div class="grid">
+  <div>
+    <label for="from">De:</label>
+    <select id="from">
+      <option value="C">Celsius (°C)</option>
+      <option value="F">Fahrenheit (°F)</option>
+      <option value="K">Kelvin (K)</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="to">Para:</label>
+    <select id="to">
+      <option value="C">Celsius (°C)</option>
+      <option value="F">Fahrenheit (°F)</option>
+      <option value="K">Kelvin (K)</option>
+    </select>
+  </div>
+</div>
+
+<button id="convert">Converter</button>
+<p id="result">0,00</p>
+<div id="explanation"></div>
+
+<script>
+  function convertTemperature(value, from, to) {
+    let celsius;
+
+    if (from === "C") {
+      celsius = value;
+    } else if (from === "F") {
+      celsius = (value - 32) / 1.8;
+    } else if (from === "K") {
+      celsius = value - 273.15;
+    }
+
+    let result;
+    if (to === "C") {
+      result = celsius;
+    } else if (to === "F") {
+      result = celsius * 1.8 + 32;
+    } else if (to === "K") {
+      result = celsius + 273.15;
+    }
+
+    return result;
+  }
+
+  function explainFormula(value, from, to, result) {
+    const v = parseFloat(value);
+    let explanation = "";
+
+    if (from === "C" && to === "F") {
+      explanation = `(${v} × 1.8) + 32 = ${result.toFixed(2)} °F`;
+    } else if (from === "F" && to === "C") {
+      explanation = `(${v} − 32) ÷ 1.8 = ${result.toFixed(2)} °C`;
+    } else if (from === "C" && to === "K") {
+      explanation = `${v} + 273.15 = ${result.toFixed(2)} K`;
+    } else if (from === "K" && to === "C") {
+      explanation = `${v} − 273.15 = ${result.toFixed(2)} °C`;
+    } else if (from === "F" && to === "K") {
+      explanation = `Primeiro convertemos para °C: (${v} − 32) ÷ 1.8 = ${( (v - 32)/1.8 ).toFixed(2)} °C<br>
+                     Depois para K: +273.15 = ${result.toFixed(2)} K`;
+    } else if (from === "K" && to === "F") {
+      explanation = `Primeiro convertemos para °C: ${v} − 273.15 = ${(v - 273.15).toFixed(2)} °C<br>
+                     Depois para °F: ×1.8 +32 = ${result.toFixed(2)} °F`;
+    } else {
+      explanation = "Valor original e final são iguais.";
+    }
+
+    return explanation;
+  }
+
+  document.getElementById("convert").onclick = () => {
+    const value = document.getElementById("temperature").value;
+    const from  = document.getElementById("from").value;
+    const to    = document.getElementById("to").value;
+
+    const result = convertTemperature(value, from, to);
+    document.getElementById("result").textContent =
+      result.toFixed(2) + (to === "C" ? " °C" : to === "F" ? " °F" : " K");
+
+    document.getElementById("explanation").innerHTML =
+      "<strong>Como foi calculado:</strong><br>" + explainFormula(value, from, to, result);
+  };
+</script>
