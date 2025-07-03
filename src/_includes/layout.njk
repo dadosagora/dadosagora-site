@@ -1,34 +1,31 @@
+<!-- src/_includes/layout.njk -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>{% if title %}{{ title }} | {% endif %}DadosAgora</title>
+  <title>{% if title %}{{ title }} | {% endif %}ConvertePraMim</title>
 
-  <!-- PicoCSS (estilo base) -->
   <link rel="stylesheet"
         href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-
-  <!-- Seu CSS extra -->
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 
   <header class="container">
-    <!-- --- MENU --- -->
     <nav>
       <ul class="menu">
-   <li><a href="/">Moedas</a></li>
-   <li><a href="/temperatura/">Temperatura</a></li>
-   <li><a href="/distancia/">Distância</a></li>
-   <li><a href="/peso/">Peso</a></li>
-   <li><a href="/volume/">Volume</a></li>
-   <li><a href="/tempo/">Tempo</a></li>
-</ul>
+        <li><a href="/">Moedas</a></li>
+        <li><a href="/temperatura/">Temperatura</a></li>
+        <li><a href="/distancia/">Distância</a></li>
+        <li><a href="/peso/">Peso</a></li>
+        <li><a href="/volume/">Volume</a></li>
+        <li><a href="/tempo/">Tempo</a></li>
+      </ul>
     </nav>
 
-    <h1><a href="/" style="text-decoration:none">DadosAgora</a></h1>
+    <h1><a href="/" style="text-decoration:none">ConvertePraMim</a></h1>
   </header>
 
   <main class="container">
@@ -36,8 +33,7 @@
   </main>
 
   <footer class="container">
-    <p>&copy; 2025 DadosAgora</p>
+    <p>&copy; 2025 ConvertePraMim</p>
   </footer>
-
 </body>
 </html>
