@@ -65,20 +65,23 @@ layout: layout.njk
 <script>
   const ratesBRL = {{ rates | dump | safe }};
 
-  // Cotação em BRL
+  /** Cotação em BRL */
   function toBRL(code){
     return code === "BRL" ? 1 : ratesBRL[code];
   }
 
-  // Símbolo de cada moeda
+  /** Símbolo da moeda */
   function symbol(code){
     const map = {
       BRL:"R$", USDBRL:"US$", EURBRL:"€", ARSBRL:"ARS$",
-      GBPBRL:"£", CADBRL:"C$", AUDBRL:"A$", CHFBRL:"CHF",
-      JPYBRL:"¥", BTCBRL:"₿"
+      GBPBRL:"£",  CADBRL:"C$",  AUDBRL:"A$",  CHFBRL:"CHF",
+      JPYBRL:"¥",  BTCBRL:"₿"
     };
     return map[code] || "";
   }
+
+  /** Formata número sempre com 2 casas + separador brasileiro */
+  const fmt = n => n.toLocaleString("pt-BR",{minimumFractionDigits:2});
 
   document.getElementById("convert").onclick = () => {
     const amount = parseFloat(document.getElementById("amount").value || 0);
@@ -92,14 +95,18 @@ layout: layout.njk
     const brl   = amount * srcRate;
     const final = dst === "BRL" ? brl : brl / dstRate;
 
-    // mostra resultado
+    /* ---------- resultado grande --------- */
     document.getElementById("result").textContent =
-      symbol(dst) + " " + final.toLocaleString("pt-BR",{minimumFractionDigits:2});
+      symbol(dst) + " " + fmt(final);
 
-    // mostra fórmula
+    /* ---------- explicação passo-a-passo --------- */
+    const conta =
+      `${symbol(src)} ${fmt(amount)} × ${fmt(srcRate)}` +
+      (dst !== "BRL" ? ` ÷ ${fmt(dstRate)}` : "") +
+      ` = ${symbol(dst)} ${fmt(final)}`;
+
     document.getElementById("formula").innerHTML =
-      `<strong>Fórmula:</strong> ${symbol(src)} ${amount} × ${srcRate.toFixed(4)} ` +
-      `${dst !== "BRL" ? "÷ " + dstRate.toFixed(4) : ""} = ` +
-      `${symbol(dst)} ${final.toLocaleString("pt-BR",{minimumFractionDigits:2})}`;
+      `<strong>Fórmula:</strong> ${conta}`;
   };
 </script>
+
