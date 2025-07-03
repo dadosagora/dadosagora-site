@@ -1,0 +1,66 @@
+---
+title: Conversor de Peso
+layout: layout.njk
+---
+
+<h2>Conversor de Peso</h2>
+
+<label for="peso">Valor:</label>
+<input id="peso" type="number" step="0.01" min="0" value="1">
+
+<div class="grid">
+  <div>
+    <label for="de">De:</label>
+    <select id="de">
+      <option value="kg">Quilograma (kg)</option>
+      <option value="g">Grama (g)</option>
+      <option value="lb">Libra (lb)</option>
+      <option value="oz">Onça (oz)</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="para">Para:</label>
+    <select id="para">
+      <option value="kg">Quilograma (kg)</option>
+      <option value="g">Grama (g)</option>
+      <option value="lb">Libra (lb)</option>
+      <option value="oz">Onça (oz)</option>
+    </select>
+  </div>
+</div>
+
+<button id="converter">Converter</button>
+<p id="result">0,00</p>
+
+<div id="explanation"></div>
+
+<script>
+  const taxas = {
+    kg:   1,
+    g:    1000,
+    lb:   2.20462,
+    oz:   35.274
+  };
+
+  document.getElementById("converter").onclick = () => {
+    const valor = parseFloat(document.getElementById("peso").value || 0);
+    const de = document.getElementById("de").value;
+    const para = document.getElementById("para").value;
+
+    const valorEmKg = valor / taxas[de];
+    const resultado = valorEmKg * taxas[para];
+
+    const simbolo = {
+      kg: "kg", g: "g", lb: "lb", oz: "oz"
+    };
+
+    document.getElementById("result").textContent =
+      resultado.toLocaleString("pt-BR", { minimumFractionDigits: 2 }) + " " + simbolo[para];
+
+    document.getElementById("explanation").innerHTML = `
+      <strong>Fórmula usada:</strong><br>
+      ${valor} ${simbolo[de]} ÷ ${taxas[de]} × ${taxas[para]} = ${resultado.toFixed(2)} ${simbolo[para]}
+    `;
+  };
+</script>
