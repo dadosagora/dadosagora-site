@@ -5,100 +5,117 @@ layout: layout.njk
 
 <h2>Conversor de Temperatura</h2>
 
-<label for="tVal">Valor:</label>
-<input id="tVal" type="number" step="0.01" value="0">
+<label for="tValue">Valor:</label>
+<input id="tValue" type="number" step="0.1" value="25">
 
 <div class="grid">
   <div>
-    <label for="tFrom">De:</label>
-    <select id="tFrom">
+    <label for="fromT">De:</label>
+    <select id="fromT">
       <option value="C">Celsius (°C)</option>
       <option value="F">Fahrenheit (°F)</option>
       <option value="K">Kelvin (K)</option>
     </select>
   </div>
-
   <div>
-    <label for="tTo">Para:</label>
-    <select id="tTo">
+    <label for="toT">Para:</label>
+    <select id="toT">
       <option value="C">Celsius (°C)</option>
       <option value="F">Fahrenheit (°F)</option>
       <option value="K">Kelvin (K)</option>
     </select>
   </div>
 </div>
+
+<button id="btnConvert">Converter temperatura</button>
+<p id="convResult" class="bigResult"> </p>
 
 <hr>
 
-<h3>Sensação&nbsp;térmica (opcional)</h3>
+<h3>Sensação térmica</h3>
+
 <div class="grid">
   <div>
-    <label for="wind">Vento&nbsp;(km/h):</label>
+    <label for="airTemp">Temperatura do ar (°C):</label>
+    <input id="airTemp" type="number" step="0.1" value="25">
+  </div>
+  <div>
+    <label for="wind">Vento (km/h):</label>
     <input id="wind" type="number" step="0.1" value="10">
   </div>
   <div>
-    <label for="rh">Umidade&nbsp;(%):</label>
-    <input id="rh" type="number" step="1" value="50" min="0" max="100">
+    <label for="rh">Umidade (%):</label>
+    <input id="rh" type="number" step="1"   value="60">
   </div>
 </div>
 
-<button id="btnConv">Converter</button>
-<button id="btnSens" class="secondary">Calcular sensação</button>
-
-<p id="tResult" class="lead">0,00</p>
-<p id="tSens"   class="lead"></p>
-<p id="tFormula" class="small"></p>
+<button id="btnFeels">Calcular sensação</button>
+<p     id="sensResult"        class="bigResult"> </p>
+<small id="sensExplanation"  class="small"></small>
 
 <script>
-/* ---------- funções utilitárias ---------- */
-function convTemp(v,f,t){
-  let c = f==="C"? v : f==="F"? (v-32)/1.8 : v-273.15;
-  return t==="C"? c : t==="F"? c*1.8+32 : c+273.15;
-}                                   // °C + km/h
-const windChill = (c,w)=>13.12+0.6215*c-11.37*Math.pow(w,0.16)+0.3965*c*Math.pow(w,0.16);
-// °C + %
-function heatIndex(c,rh){
-  const f=c*1.8+32;
-  const hiF=-42.379+2.04901523*f+10.14333127*rh-0.22475541*f*rh-6.83783e-3*f*f
-            -5.481717e-2*rh*rh+1.22874e-3*f*f*rh+8.5282e-4*f*rh*rh-1.99e-6*f*f*rh*rh;
-  return (hiF-32)/1.8;
+/* ------------------------------------------------------------------ */
+/* 1. CONVERSÃO DE TEMPERATURA                                        */
+/* ------------------------------------------------------------------ */
+function convTemp(v, from, to){
+  // 1º: converte tudo p/ Kelvin
+  let K = (from==="C") ? v+273.15
+        : (from==="F") ? (v+459.67)*5/9
+        : v; // já em Kelvin
+  // 2º: Kelvin -> destino
+  return (to==="C") ? K-273.15
+       : (to==="F") ? K*9/5-459.67
+       : K;
 }
-const fmt=n=>n.toLocaleString("pt-BR",{minimumFractionDigits:2});
-
-/* ---------- elementos ---------- */
-const tVal  = document.getElementById("tVal");
-const tFrom = document.getElementById("tFrom");
-const tTo   = document.getElementById("tTo");
-const wind  = document.getElementById("wind");
-const rh    = document.getElementById("rh");
-const res   = document.getElementById("tResult");
-const sens  = document.getElementById("tSens");
-const form  = document.getElementById("tFormula");
-
-/* ---------- conversão ---------- */
-btnConv.onclick = () => {
-  const v=parseFloat(tVal.value)||0;
-  const f=tFrom.value, t=tTo.value;
-  const r=convTemp(v,f,t);
-  res.textContent = fmt(r)+" "+(t==="C"?"°C":t==="F"?"°F":"K");
-  form.textContent=`${fmt(v)} ${f} → ${fmt(r)} ${t}`;
-  sens.textContent="";
+function fmt(n,un){                // formatação
+  return n.toLocaleString("pt-BR",{maximumFractionDigits:2})+" °"+un;
+}
+document.getElementById("btnConvert").onclick = () =>{
+  const v    = parseFloat(document.getElementById("tValue").value||0);
+  const src  = document.getElementById("fromT").value;
+  const dst  = document.getElementById("toT").value;
+  const res  = convTemp(v,src,dst);
+  document.getElementById("convResult").textContent = fmt(res,dst);
 };
 
-/* ---------- sensação térmica ---------- */
-btnSens.onclick = () => {
-  const tempC = parseFloat(tVal.value)||0;
-  const w = parseFloat(wind.value)||0;
-  const u = parseFloat(rh.value)||0;
+/* ------------------------------------------------------------------ */
+/* 2. SENSAÇÃO TÉRMICA                                                */
+/*    - Wind Chill  (<=10 °C)                                         */
+/*    - Heat Index  (>=27 °C)                                         */
+/* ------------------------------------------------------------------ */
+function windChill_C(tC, vKm){
+  const v = vKm/3.6;               // km/h ➜ m/s
+  return 13.12 + 0.6215*tC - 11.37*Math.pow(v,0.16) + 0.3965*tC*Math.pow(v,0.16);
+}
+function heatIndex_C(tC, rh){
+  // algoritmo simplificado de Steadman (aprox.)
+  const tF = tC*9/5+32;
+  const HI =
+    -42.379 + 2.04901523*tF + 10.14333127*rh
+    -0.22475541*tF*rh - 0.00683783*tF*tF
+    -0.05481717*rh*rh + 0.00122874*tF*tF*rh
+    +0.00085282*tF*rh*rh - 0.00000199*tF*tF*rh*rh;
+  return (HI-32)*5/9;
+}
+document.getElementById("btnFeels").onclick = () =>{
+  const t   = parseFloat(document.getElementById("airTemp").value||0);
+  const v   = parseFloat(document.getElementById("wind"   ).value||0);
+  const rh  = parseFloat(document.getElementById("rh"     ).value||0);
 
-  let txt="";
-  if(tempC<=10 && w>=4.8){
-    txt = "Wind-chill: "+fmt(windChill(tempC,w))+" °C";
-  }else if(tempC>=27 && u>=40){
-    txt = "Heat-index: "+fmt(heatIndex(tempC,u))+" °C";
+  let sens , txt ;
+
+  if(t <= 10){
+    sens = windChill_C(t,v);
+    txt  = `Wind Chill`;
+  }else if(t >= 27){
+    sens = heatIndex_C(t,rh);
+    txt  = `Heat Index`;
   }else{
-    txt = "Sensação ≈ temperatura real";
+    sens = t;
+    txt  = `Sem ajuste significativo`;
   }
-  sens.textContent=txt;
+  document.getElementById("sensResult"      ).textContent = fmt(sens,"C");
+  document.getElementById("sensExplanation" ).textContent =
+    `${txt}: temperatura equivalente considerando vento e/ou umidade.`;
 };
 </script>
