@@ -1,16 +1,35 @@
-#formula {
-  font-size: 0.9rem;
-  color: #555;
-  background: #f2f2f2;
-  padding: 0.75rem;
-  border-radius: 6px;
-  margin-top: 0.5rem;
+/* ---------------- Navegação ---------------- */
+.menu{
+  display:flex;
+  gap:.75rem;
+  list-style:none;
+  margin:0 0 1rem 0;
+  padding:0;
+}
+.menu a{
+  text-decoration:none;
+  color:var(--pico-primary);
+  font-size:.9rem;
+}
+.menu a:hover{
+  text-decoration:underline;
 }
 
-/* === Destaque ainda maior para o valor convertido === */
+/* ---------- Destaque do valor convertido ---------- */
 #result{
-  margin-top: 1.5rem;      /* respiro acima */
-  font-size: 3rem;         /* MUITO maior */
-  font-weight: 700;        /* negrito */
-  color: #0070f3;          /* azul; troque se quiser outro tom */
+  margin-top:1.5rem;
+  font-size:3rem;      /* bem grande */
+  font-weight:700;     /* negrito   */
+  color:#0070f3;       /* azul      */
+  text-align:center;
+}
+
+/* Caixa da fórmula */
+#formula{
+  font-size:.9rem;
+  color:#555;
+  background:#f2f2f2;
+  padding:.75rem;
+  border-radius:6px;
+  margin-top:.5rem;
 }
