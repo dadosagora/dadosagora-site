@@ -1,0 +1,61 @@
+---
+title: Conversor de Tempo
+layout: layout.njk
+---
+
+<h2>Conversor de Tempo</h2>
+
+<label for="valor">Valor:</label>
+<input id="valor" type="number" step="0.01" min="0" value="1">
+
+<div class="grid">
+  <div>
+    <label for="de">De:</label>
+    <select id="de">
+      <option value="sec">Segundos (s)</option>
+      <option value="min">Minutos (min)</option>
+      <option value="hr">Horas (h)</option>
+      <option value="day">Dias (d)</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="para">Para:</label>
+    <select id="para">
+      <option value="sec">Segundos (s)</option>
+      <option value="min">Minutos (min)</option>
+      <option value="hr">Horas (h)</option>
+      <option value="day">Dias (d)</option>
+    </select>
+  </div>
+</div>
+
+<button id="btnTempo">Converter</button>
+<p id="result">0,00</p>
+<p id="explanation" class="small" style="display:none"></p>
+
+<script>
+  // fatores em relação a 1 segundo
+  const factors = { sec: 1, min: 60, hr: 3600, day: 86400 };
+
+  const format = n => n.toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4
+  });
+
+  document.getElementById("btnTempo").onclick = () => {
+    const v   = parseFloat(document.getElementById("valor").value || 0);
+    const src = document.getElementById("de").value;
+    const dst = document.getElementById("para").value;
+
+    // converte → segundos → destino
+    const emSeg   = v * factors[src];
+    const final   = emSeg / factors[dst];
+
+    // exibe
+    document.getElementById("result").textContent = format(final);
+    document.getElementById("explanation").style.display = "";
+    document.getElementById("explanation").innerHTML =
+      `<strong>Fórmula:</strong> ${format(v)} ${src} × ${factors[src].toLocaleString()} ÷ ${factors[dst].toLocaleString()} = <strong>${format(final)} ${dst}</strong>`;
+  };
+</script>
