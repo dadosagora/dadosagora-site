@@ -33,33 +33,9 @@
   <link rel="stylesheet" href="/assets/styles.css">
 
   <title>{% if title %}{{ title }} | {% endif %}ConvertePraMim</title>
+
+  <!-- 👇 DEBUG TEMPORÁRIO -->
+  <script>
+    console.log("🟡 DEBUG - Meta description:", "{{ description or 'FALHOU' }}");
+  </script>
 </head>
-<body class="container">
-
-  <header>
-    <h1 style="margin-bottom:.5rem">
-      <a href="/" style="text-decoration:none">ConvertePraMim</a>
-    </h1>
-
-    <nav>
-      <ul class="menu">
-        <li><a href="/">Moedas</a></li>
-        <li><a href="/temperatura/">Temperatura</a></li>
-        <li><a href="/distancia/">Distância</a></li>
-        <li><a href="/peso/">Peso</a></li>
-        <li><a href="/volume/">Volume</a></li>
-        <li><a href="/tempo/">Tempo</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    {{ content | safe }}
-  </main>
-
-  <footer style="margin-top:3rem">
-    <p>&copy; {{ "now" | date("yyyy") }} ConvertePraMim</p>
-  </footer>
-
-</body>
-</html>
