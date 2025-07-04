@@ -1,30 +1,32 @@
-// .eleventy.js  – configuração do Eleventy
+// .eleventy.js
+const { DateTime } = require("luxon");
+
 module.exports = function (eleventyConfig) {
-  /* ------------------------------------------------------------------
-     Filtro “number” → formata valores numéricos usando toLocaleString()
-     Uso no template:
-       {{ 1234.567 | number(2, "pt-BR") }}  →  1.234,57
-  ------------------------------------------------------------------ */
-  eleventyConfig.addFilter(
-    "number",
-    (value, digits = 2, locale = "pt-BR") =>
-      Number(value).toLocaleString(locale, {
-        minimumFractionDigits: digits,
-        maximumFractionDigits: digits,
-      })
-  );
 
-  /* Se já havia outras configurações, mantenha aqui ↓ */
-  // Copia estáticos
-  eleventyConfig.addPassthroughCopy("src/assets");
-  eleventyConfig.addPassthroughCopy("src/styles.css");
+  /* -------------------------------------------------
+   * Filtro | date
+   * Uso:
+   *   {{ "now" | date }}              -> 2025
+   *   {{ someDate | date("dd/LL/yyyy") }} -> 03/07/2025
+   * -------------------------------------------------*/
+  eleventyConfig.addFilter("date", (value = "now", format = "yyyy") => {
+    const dt =
+      value === "now"
+        ? DateTime.local()
+        : DateTime.fromJSDate(value instanceof Date ? value : new Date(value));
 
+    return dt.setLocale("pt-BR").toFormat(format);
+  });
+
+  /* --- Qualquer outra configuração que você já tenha --- */
+  eleventyConfig.setQuietMode(true);
 
   return {
     dir: {
-      input: "src",
-      output: "_site",
-    },
-    templateFormats: ["njk", "html", "md", "11ty.js"],
+      input:    "src",
+      includes: "_includes",
+      data:     "_data",
+      output:   "_site"
+    }
   };
 };
