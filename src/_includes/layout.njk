@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  {# ⭐ Descrição dinâmica — usa o front-matter “description”, senão cai no texto-padrão #}
+  {# ⭐ Descrição dinâmica – usa a descrição do front-matter ou um texto padrão #}
   <meta name="description"
         content="{{ description or 'Converta moedas, temperaturas, distâncias, pesos e volumes rapidamente com o ConvertePraMim.' }}">
 
@@ -34,8 +34,38 @@
 
   <title>{% if title %}{{ title }} | {% endif %}ConvertePraMim</title>
 
-  <!-- 👇 DEBUG TEMPORÁRIO -->
+  <!-- DEBUG TEMPORÁRIO -->
   <script>
-    console.log("🟡 DEBUG - Meta description:", "{{ description or 'FALHOU' }}");
+    console.log("🟡 DEBUG – description:", "{{ description or 'FALHOU' }}");
   </script>
 </head>
+
+<body class="container">
+
+  <header>
+    <h1 style="margin-bottom:.5rem">
+      <a href="/" style="text-decoration:none">ConvertePraMim</a>
+    </h1>
+
+    <nav>
+      <ul class="menu">
+        <li><a href="/">Moedas</a></li>
+        <li><a href="/temperatura/">Temperatura</a></li>
+        <li><a href="/distancia/">Distância</a></li>
+        <li><a href="/peso/">Peso</a></li>
+        <li><a href="/volume/">Volume</a></li>
+        <li><a href="/tempo/">Tempo</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {{ content | safe }}
+  </main>
+
+  <footer style="margin-top:3rem">
+    <p>&copy; {{ "now" | date("yyyy") }} ConvertePraMim</p>
+  </footer>
+
+</body>
+</html>
