@@ -3,31 +3,33 @@
 <html lang="pt-BR">
 <head>
   {# –– SEO básico –– #}
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{# ⭐ Descrição dinâmica
-   - se a página trouxer `description` no front-matter usa-se,
-   - senão, cai no texto-padrão entre aspas  #}
-<meta name="description"
-      content="{{ description or 'Converta moedas, temperaturas, distâncias, pesos e volumes rapidamente com o ConvertePraMim.' }}">
+  {# ⭐ Descrição dinâmica — usa o front-matter “description”, senão cai no texto-padrão #}
+  <meta name="description"
+        content="{{ description or 'Converta moedas, temperaturas, distâncias, pesos e volumes rapidamente com o ConvertePraMim.' }}">
 
   {# –– Open Graph –– #}
-  <meta property="og:title"       content="ConvertePraMim – Conversores online gratuitos">
-  <meta property="og:description" content="Conversores práticos de moedas, temperatura, distância, peso, volume e mais.">
-  <meta property="og:image"       content="/assets/og-image.png">
-  <meta property="og:url"         content="https://convertepramim.com.br">
-  <meta property="og:type"        content="website">
+  <meta property="og:title"
+        content="{% if title %}{{ title }} | {% endif %}ConvertePraMim">
+  <meta property="og:description"
+        content="{{ description or 'Conversores práticos de moedas, temperatura, distância, peso, volume e mais.' }}">
+  <meta property="og:image" content="/assets/og-image.png">
+  <meta property="og:url"   content="https://convertepramim.com.br">
+  <meta property="og:type"  content="website">
 
   {# –– Twitter Card –– #}
   <meta name="twitter:card"        content="summary_large_image">
-  <meta name="twitter:title"       content="ConvertePraMim – Conversores online gratuitos">
-  <meta name="twitter:description" content="Converta tudo o que precisa em um só lugar.">
+  <meta name="twitter:title"
+        content="{% if title %}{{ title }} | {% endif %}ConvertePraMim">
+  <meta name="twitter:description"
+        content="{{ description or 'Converta tudo o que precisa em um só lugar.' }}">
   <meta name="twitter:image"       content="/assets/og-image.png">
 
   {# –– Estilos –– #}
-  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-  <!-- 👇 caminho CORRETO dentro de /assets -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
   <link rel="stylesheet" href="/assets/styles.css">
 
   <title>{% if title %}{{ title }} | {% endif %}ConvertePraMim</title>
