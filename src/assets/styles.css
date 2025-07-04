@@ -1,9 +1,61 @@
-/* Deixa a lista e o resultado um pouco mais juntos */
-ul { margin-bottom: 0.5rem; }
-.small { font-size: .875rem; color: #666; }
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: .75rem 1rem;
+/* ------------------------  Estilo base do layout  ------------------------ */
+body{
+  font-family:system-ui,sans-serif;
+  margin:0;
+  padding:0;
 }
+
+/* ----------------------  Espaçamento em formulários  --------------------- */
+.grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:1rem;
+  margin-bottom:1rem;
+}
+.grid>div{flex:1 1 200px;}
+
+/* ------------------  Destaque para RESULTADOS de conversão  -------------- */
+/* Moedas │ Temperatura (IDs diferentes) */
+#result,
+#tResult{
+  margin-top:1.5rem;
+  font-size:3rem;          /* maior */
+  font-weight:700;         /* negrito */
+  color:#0070f3!important; /* azul */
+  text-align:center;
+}
+
+/* ------------------  Fórmulas / explicações (todos os conversores) ------- */
+#formula,
+#tFormula{
+  margin-top:1rem;
+  font-size:.95rem;
+  color:#555;
+  background:#f4f4f4;
+  padding:1rem;
+  border-left:4px solid #0070f3;
+  border-radius:4px;
+}
+
+/* ------------------  Bloco geral de explicação (moedas)  ----------------- */
+#explanation{
+  margin-top:1rem;
+  font-size:.95rem;
+  color:#555;
+  background:#f4f4f4;
+  padding:1rem;
+  border-left:4px solid #0070f3;
+  border-radius:4px;
+}
+
+/* ---- resultado grande opcional (caso queira usar classe) ---- */
+.bigResult{
+  margin-top:1rem;
+  font-size:3rem;
+  font-weight:700;
+  color:#0070f3;
+  text-align:center;
+}
+
+/* Texto auxiliar pequeno */
+.small{font-size:.85rem;color:#555;}
