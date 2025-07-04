@@ -15,9 +15,8 @@ body{
 .grid>div{flex:1 1 200px;}
 
 /* ------------------  Destaque para RESULTADOS de conversão  -------------- */
-/* moedas (já existia) */
+/* Moedas │ Temperatura (IDs diferentes) */
 #result,
-/* temperatura */
 #tResult{
   margin-top:1.5rem;
   font-size:3rem;          /* maior */
@@ -26,15 +25,30 @@ body{
   text-align:center;
 }
 
-/* -----------------  Bloco explicação da fórmula (moedas)  ---------------- */
+/* ------------------  Fórmulas / explicações (todos os conversores) ------- */
+#formula,
+#tFormula{
+  margin-top:1rem;
+  font-size:.95rem;
+  color:#555;
+  background:#f4f4f4;
+  padding:1rem;
+  border-left:4px solid #0070f3;
+  border-radius:4px;
+}
+
+/* ------------------  Bloco geral de explicação (moedas)  ----------------- */
 #explanation{
   margin-top:1rem;
   font-size:.95rem;
   color:#555;
   background:#f4f4f4;
   padding:1rem;
+  border-left:4px solid #0070f3;
+  border-radius:4px;
+}
 
-  /* ---- resultado grande para conversão & sensação térmica ---- */
+/* ---- resultado grande opcional (caso queira usar classe) ---- */
 .bigResult{
   margin-top:1rem;
   font-size:3rem;
@@ -42,6 +56,6 @@ body{
   color:#0070f3;
   text-align:center;
 }
-/* opcional: texto explicativo menor */
-.small{font-size:.85rem;color:#555;}
 
+/* Texto auxiliar pequeno */
+.small{font-size:.85rem;color:#555;}
