@@ -47,9 +47,9 @@
     </nav>
   </header>
 
-  {# –– Conteúdo injectado pelas páginas –– #}
+  {# –– Conteúdo principal vindo das páginas –– #}
   <main>
-    {% block content %}{% endblock %}
+    {{ content | safe }}
   </main>
 
   <footer style="margin-top:3rem">
