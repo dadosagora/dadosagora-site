@@ -1,31 +1,60 @@
+{# src/_includes/layout.njk #}
 <!DOCTYPE html>
 <html lang="pt-BR">
-<!-- SEO Básico -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Converta medidas, moedas e muito mais com o ConvertePraMim. Rápido, fácil e gratuito.">
-<meta name="author" content="ConvertePraMim">
-<meta name="robots" content="index, follow">
+<head>
+  {# –– SEO básico –– #}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Converta moedas, temperaturas, distâncias e muito mais de forma rápida e gratuita.">
+  <meta name="author"    content="ConvertePraMim">
+  <meta name="robots"    content="index,follow">
 
-<!-- Open Graph (para redes sociais) -->
-<meta property="og:title" content="ConvertePraMim - Conversores práticos e gratuitos">
-<meta property="og:description" content="Converta temperaturas, moedas, distâncias, pesos, volumes e muito mais de forma simples e rápida.">
-<meta property="og:image" content="/assets/og-image.png">
-<meta property="og:url" content="https://convertepramim.com.br">
-<meta property="og:type" content="website">
+  {# –– Open Graph –– #}
+  <meta property="og:title"       content="ConvertePraMim – Conversores online gratuitos">
+  <meta property="og:description" content="Conversores práticos de moedas, temperatura, distância, peso, volume e mais.">
+  <meta property="og:image"       content="/assets/og-image.png">
+  <meta property="og:url"         content="https://convertepramim.com.br">
+  <meta property="og:type"        content="website">
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ConvertePraMim - Conversores online gratuitos">
-<meta name="twitter:description" content="Conversores práticos de temperatura, moedas, distância, peso e mais.">
-<meta name="twitter:image" content="/assets/og-image.png">
+  {# –– Twitter Card –– #}
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="ConvertePraMim – Conversores online gratuitos">
+  <meta name="twitter:description" content="Converta tudo o que precisa em um só lugar.">
+  <meta name="twitter:image"       content="/assets/og-image.png">
 
-
-  {# –– LINKS DE ESTILO –– #}
+  {# –– Estilos –– #}
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
   <link rel="stylesheet" href="/styles.css">
+
+  {# –– Título dinâmico –– #}
+  <title>{% if title %}{{ title }} | {% endif %}ConvertePraMim</title>
 </head>
-<body>
-  <!-- … restante do layout … -->
+<body class="container">
+
+  {# –– Cabeçalho & menu –– #}
+  <header>
+    <h1 style="margin-bottom:0.5rem"><a href="/" style="text-decoration:none">ConvertePraMim</a></h1>
+
+    <nav>
+      <ul class="menu">
+        <li><a href="/">Moedas</a></li>
+        <li><a href="/temperatura/">Temperatura</a></li>
+        <li><a href="/distancia/">Distância</a></li>
+        <li><a href="/peso/">Peso</a></li>
+        <li><a href="/volume/">Volume</a></li>
+        <li><a href="/tempo/">Tempo</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  {# –– Conteúdo injectado pelas páginas –– #}
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer style="margin-top:3rem">
+    <p>&copy; {{ "now" | date("yyyy") }} ConvertePraMim</p>
+  </footer>
+
 </body>
 </html>
