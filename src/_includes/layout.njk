@@ -6,9 +6,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  {# ⭐ Descrição dinâmica – usa a descrição do front-matter ou um texto padrão #}
+ {# ———  DESCRIÇÃO dinâmica  ——— #}
+{% if description %}
+  <meta name="description" content="{{ description | escape }}">
+{% else %}
   <meta name="description"
-        content="{{ description or 'Converta moedas, temperaturas, distâncias, pesos e volumes rapidamente com o ConvertePraMim.' }}">
+        content="Converta moedas, temperaturas, distâncias, pesos e volumes rapidamente com o ConvertePraMim.">
+{% endif %}
+
 
   {# –– Open Graph –– #}
   <meta property="og:title"
