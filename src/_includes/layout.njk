@@ -24,16 +24,17 @@
 
   {# –– Estilos –– #}
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-  <link rel="stylesheet" href="/styles.css">
+  <!-- 👇 caminho CORRETO dentro de /assets -->
+  <link rel="stylesheet" href="/assets/styles.css">
 
-  {# –– Título dinâmico –– #}
   <title>{% if title %}{{ title }} | {% endif %}ConvertePraMim</title>
 </head>
 <body class="container">
 
-  {# –– Cabeçalho & menu –– #}
   <header>
-    <h1 style="margin-bottom:0.5rem"><a href="/" style="text-decoration:none">ConvertePraMim</a></h1>
+    <h1 style="margin-bottom:.5rem">
+      <a href="/" style="text-decoration:none">ConvertePraMim</a>
+    </h1>
 
     <nav>
       <ul class="menu">
@@ -47,7 +48,6 @@
     </nav>
   </header>
 
-  {# –– Conteúdo principal vindo das páginas –– #}
   <main>
     {{ content | safe }}
   </main>
