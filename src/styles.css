@@ -1,81 +1,54 @@
-/* Estilo base para o layout */
-body {
-  font-family: system-ui, sans-serif;
-  margin: 0;
-  padding: 0;
+/* ------------------------  Estilo base do layout  ------------------------ */
+body{
+  font-family:system-ui,sans-serif;
+  margin:0;
+  padding:0;
 }
 
-/* Espaçamento entre os campos do formulário */
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
+/* ----------------------  Espaçamento em formulários  --------------------- */
+.grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:1rem;
+  margin-bottom:1rem;
+}
+.grid>div{flex:1 1 200px;}
+
+/* ------------------  Destaque para RESULTADOS de conversão  -------------- */
+/* Moedas │ Temperatura (IDs diferentes) */
+#result,
+#tResult{
+  margin-top:1.5rem;
+  font-size:3rem;          /* maior */
+  font-weight:700;         /* negrito */
+  color:#0070f3!important; /* azul */
+  text-align:center;
 }
 
-.grid > div {
-  flex: 1 1 200px;
+/* ------------------  Fórmulas / explicações (todos os conversores) ------- */
+#formula,
+#tFormula{
+  margin-top:1rem;
+  font-size:.95rem;
+  color:#555;
+  background:#f4f4f4;
+  padding:1rem;
+  border-left:4px solid #0070f3;
+  border-radius:4px;
 }
 
-/* Resultado da conversão com destaque */
-#result {
-  margin-top: 1.5rem;
-  font-size: 3rem;         /* Maior */
-  font-weight: 700;        /* Negrito */
-  color: #0070f3 !important; /* Azul */
-  text-align: center;
+/* ------------------  Bloco geral de explicação (moedas)  ----------------- */
+#explanation{
+  margin-top:1rem;
+  font-size:.95rem;
+  color:#555;
+  background:#f4f4f4;
+  padding:1rem;
+  border-left:4px solid #0070f3;
+  border-radius:4px;
 }
 
-/* Estilo do bloco de explicação da fórmula */
-#explanation {
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  color: #555;
-  background-color: #f4f4f4;
-  padding: 1rem;
-  border-left: 4px solid #0070f3;
-  border-radius: 4px;
-}
-
-/* Links no rodapé */
-footer a {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-footer a:hover {
-  text-decoration: underline;
-}
-
-/* Estilo do menu de navegação */
-.menu {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1rem 0;
-}
-
-.menu a {
-  text-decoration: none;
-  color: #0070f3;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.menu a:hover {
-  text-decoration: underline;
-}
-
-#sensacao{
-  font-size:1.2rem;
-  font-weight:600;
-  color:#c62828; /* vermelho suave */
-  margin-top:.25rem;
-}
-
-/* ---- resultado grande para conversão & sensação térmica ---- */
+/* ---- resultado grande opcional (caso queira usar classe) ---- */
 .bigResult{
   margin-top:1rem;
   font-size:3rem;
@@ -83,5 +56,6 @@ footer a:hover {
   color:#0070f3;
   text-align:center;
 }
-/* opcional: texto explicativo menor */
+
+/* Texto auxiliar pequeno */
 .small{font-size:.85rem;color:#555;}
