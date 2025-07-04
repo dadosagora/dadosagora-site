@@ -2,13 +2,10 @@
 const { DateTime } = require("luxon");
 
 module.exports = function (eleventyConfig) {
-
-  /* -------------------------------------------------
-   * Filtro | date
-   * Uso:
-   *   {{ "now" | date }}              -> 2025
-   *   {{ someDate | date("dd/LL/yyyy") }} -> 03/07/2025
-   * -------------------------------------------------*/
+  /* -----------------------------------------
+   * Filtro: date
+   * Uso: {{ "now" | date("yyyy") }}  → 2025
+   * --------------------------------------- */
   eleventyConfig.addFilter("date", (value = "now", format = "yyyy") => {
     const dt =
       value === "now"
@@ -18,15 +15,29 @@ module.exports = function (eleventyConfig) {
     return dt.setLocale("pt-BR").toFormat(format);
   });
 
-  /* --- Qualquer outra configuração que você já tenha --- */
+  /* -----------------------------------------
+   * Filtro: number
+   * Uso: {{ 1234.567 | number(2,"pt-BR") }} → 1.234,57
+   * --------------------------------------- */
+  eleventyConfig.addFilter(
+    "number",
+    (value = 0, digits = 2, locale = "pt-BR") =>
+      Number(value).toLocaleString(locale, {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+      })
+  );
+
+  /* Menos barulho nos logs */
   eleventyConfig.setQuietMode(true);
 
+  /* Diretórios do projeto */
   return {
     dir: {
-      input:    "src",
+      input: "src",
       includes: "_includes",
-      data:     "_data",
-      output:   "_site"
-    }
+      data: "_data",
+      output: "_site",
+    },
   };
 };
