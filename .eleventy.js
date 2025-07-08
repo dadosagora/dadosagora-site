@@ -1,8 +1,10 @@
 // .eleventy.js
 const { DateTime } = require("luxon");
+const pluginSitemap = require("@quasibit/eleventy-plugin-sitemap");   // ← NOVO
 
 module.exports = function (eleventyConfig) {
-  /* ---------- filtros de data ---------- */
+
+  /* ---------- filtro de data ---------- */
   eleventyConfig.addFilter("date", (value = "now", format = "yyyy") => {
     const dt =
       value === "now"
@@ -11,9 +13,8 @@ module.exports = function (eleventyConfig) {
     return dt.setLocale("pt-BR").toFormat(format);
   });
 
-  /* ---------- filtros numéricos ---------- */
-  eleventyConfig.addFilter(
-    "number",
+  /* ---------- filtro numérico ---------- */
+  eleventyConfig.addFilter("number",
     (value = 0, digits = 2, locale = "pt-BR") =>
       Number(value).toLocaleString(locale, {
         minimumFractionDigits: digits,
@@ -21,10 +22,17 @@ module.exports = function (eleventyConfig) {
       })
   );
 
-  /* ---------- copia estáticos ---------- */
-  eleventyConfig.addPassthroughCopy("src/assets");   // 👉 NOVA LINHA
+  /* ---------- sitemap.xml ---------- */
+  eleventyConfig.addPlugin(pluginSitemap, {
+    sitemap: {
+      hostname: "https://convertepramim.com.br",   // seu domínio
+    },
+  });
 
-  /* Menos barulho no console */
+  /* ---------- arquivos estáticos ---------- */
+  eleventyConfig.addPassthroughCopy("src/assets");     // imagens, css, etc.
+  eleventyConfig.addPassthroughCopy("src/robots.txt"); // opcional: robots.txt
+
   eleventyConfig.setQuietMode(true);
 
   return {
