@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "@11ty/eleventy": "^3.0.1",
-    "@quasibit/eleventy-plugin-sitemap": "^1.0.15"
+    "@quasibit/eleventy-plugin-sitemap": "^1.0.0"
   }
 }
