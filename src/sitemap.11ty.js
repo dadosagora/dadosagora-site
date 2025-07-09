@@ -1,6 +1,8 @@
 module.exports = {
-  // Arquivo final gerado em /sitemap.xml
-  permalink: "/sitemap.xml",
+  // Gera _site/sitemap.xml (arquivo, não pasta)
+  permalink: "sitemap.xml",
+  // ── se preferir com barra na raiz, use: permalink: "/sitemap.xml",
+
   eleventyExcludeFromCollections: true,
   layout: null,
   contentType: "application/xml",
