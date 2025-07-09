@@ -1,18 +1,18 @@
 module.exports = {
+  // Arquivo final gerado em /sitemap.xml
   permalink: "/sitemap.xml",
   eleventyExcludeFromCollections: true,
   layout: null,
   contentType: "application/xml",
-  data() {
-    return {
-      sitemap: this.ctx.collections.all,
-      hostname: "https://convertepramim.com.br"
-    };
-  },
-  render({ sitemap, hostname }) {
+
+  // <render> recebe as collections após o Eleventy processar tudo
+  render({ collections }) {
+    const hostname = "https://convertepramim.com.br";
+    const pages = collections.all || [];
+
     return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemap
+${pages
   .map((page) => {
     const url = page.url || page.data?.page?.url;
     if (!url || url.includes("404")) return "";
