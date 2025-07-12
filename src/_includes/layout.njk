@@ -6,25 +6,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-GPTGL49PRS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GPTGL49PRS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GPTGL49PRS');
+  </script>
 
-  gtag('config', 'G-GPTGL49PRS');
-</script>
-
-
- {# ———  DESCRIÇÃO dinâmica  ——— #}
-{% if description %}
-  <meta name="description" content="{{ description | escape }}">
-{% else %}
-  <meta name="description"
-        content="Converta moedas, temperaturas, distâncias, pesos e volumes rapidamente com o ConvertePraMim.">
-{% endif %}
-
+  {# ———  DESCRIÇÃO dinâmica  ——— #}
+  {% if description %}
+    <meta name="description" content="{{ description | escape }}">
+  {% else %}
+    <meta name="description"
+          content="Converta moedas, temperaturas, distâncias, pesos e volumes rapidamente com o ConvertePraMim.">
+  {% endif %}
 
   {# –– Open Graph –– #}
   <meta property="og:title"
@@ -49,8 +46,9 @@
   <link rel="stylesheet" href="/assets/styles.css">
 
   <title>{% if title %}{{ title }} | {% endif %}ConvertePraMim</title>
+</head>
 
- <body class="container">
+<body class="container">
 
   <header>
     <h1 style="margin-bottom:.5rem">
@@ -73,8 +71,13 @@
     {{ content | safe }}
   </main>
 
-  <footer style="margin-top:3rem">
-    <p>&copy; {{ "now" | date("yyyy") }} ConvertePraMim</p>
+  <footer style="margin-top:3rem; padding-top:1rem; border-top:1px solid #ccc; font-size:0.9rem; text-align:center">
+    <p>
+      <a href="/sobre">Sobre</a> |
+      <a href="/contato">Contato</a> |
+      <a href="/privacidade">Política de Privacidade</a>
+    </p>
+    <p style="color:#777">&copy; {{ "now" | date("yyyy") }} ConvertePraMim</p>
   </footer>
 
 </body>
