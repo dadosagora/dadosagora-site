@@ -4,10 +4,8 @@ description: Converta Celsius, Fahrenheit e Kelvin em segundos e descubra a sens
 layout: layout.njk
 ---
 
-
 <h2>Conversor de Temperatura</h2>
 <p>Converta Celsius, Fahrenheit e Kelvin com precisão instantânea. Ferramenta ideal para estudantes, cozinheiros e viajantes.</p>
-
 
 <label for="tValue">Valor:</label>
 <input id="tValue" type="number" step="0.1" value="25">
@@ -58,68 +56,82 @@ layout: layout.njk
 <small id="sensExplanation"  class="small"></small>
 
 <script>
-/* ------------------------------------------------------------------ */
-/* 1. CONVERSÃO DE TEMPERATURA                                        */
-/* ------------------------------------------------------------------ */
 function convTemp(v, from, to){
-  // 1º: converte tudo p/ Kelvin
   let K = (from==="C") ? v+273.15
         : (from==="F") ? (v+459.67)*5/9
-        : v; // já em Kelvin
-  // 2º: Kelvin -> destino
+        : v;
   return (to==="C") ? K-273.15
        : (to==="F") ? K*9/5-459.67
        : K;
 }
-function fmt(n,un){                // formatação
+function fmt(n,un){
   return n.toLocaleString("pt-BR",{maximumFractionDigits:2})+" °"+un;
 }
-document.getElementById("btnConvert").onclick = () =>{
+document.getElementById("btnConvert").onclick = () => {
   const v    = parseFloat(document.getElementById("tValue").value||0);
   const src  = document.getElementById("fromT").value;
   const dst  = document.getElementById("toT").value;
   const res  = convTemp(v,src,dst);
-  document.getElementById("convResult").textContent = fmt(res,dst);
+  const resultText = fmt(res,dst);
+
+  document.getElementById("convResult").textContent = resultText;
+
+  // Envia para Google Sheets
+  fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      pagina: "temperatura",
+      resultado: resultText
+    })
+  });
 };
 
-/* ------------------------------------------------------------------ */
-/* 2. SENSAÇÃO TÉRMICA                                                */
-/*    - Wind Chill  (<=10 °C)                                         */
-/*    - Heat Index  (>=27 °C)                                         */
-/* ------------------------------------------------------------------ */
 function windChill_C(tC, vKm){
-  const v = vKm/3.6;               // km/h ➜ m/s
+  const v = vKm/3.6;
   return 13.12 + 0.6215*tC - 11.37*Math.pow(v,0.16) + 0.3965*tC*Math.pow(v,0.16);
 }
 function heatIndex_C(tC, rh){
-  // algoritmo simplificado de Steadman (aprox.)
   const tF = tC*9/5+32;
-  const HI =
-    -42.379 + 2.04901523*tF + 10.14333127*rh
+  const HI = -42.379 + 2.04901523*tF + 10.14333127*rh
     -0.22475541*tF*rh - 0.00683783*tF*tF
     -0.05481717*rh*rh + 0.00122874*tF*tF*rh
     +0.00085282*tF*rh*rh - 0.00000199*tF*tF*rh*rh;
   return (HI-32)*5/9;
 }
-document.getElementById("btnFeels").onclick = () =>{
+document.getElementById("btnFeels").onclick = () => {
   const t   = parseFloat(document.getElementById("airTemp").value||0);
   const v   = parseFloat(document.getElementById("wind"   ).value||0);
   const rh  = parseFloat(document.getElementById("rh"     ).value||0);
 
-  let sens , txt ;
+  let sens, txt;
 
   if(t <= 10){
     sens = windChill_C(t,v);
-    txt  = `Wind Chill`;
+    txt  = "Wind Chill";
   }else if(t >= 27){
     sens = heatIndex_C(t,rh);
-    txt  = `Heat Index`;
+    txt  = "Heat Index";
   }else{
     sens = t;
-    txt  = `Sem ajuste significativo`;
+    txt  = "Sem ajuste significativo";
   }
-  document.getElementById("sensResult"      ).textContent = fmt(sens,"C");
-  document.getElementById("sensExplanation" ).textContent =
-    `${txt}: temperatura equivalente considerando vento e/ou umidade.`;
+
+  const resultText = `${txt}: ${fmt(sens,"C")}`;
+
+  document.getElementById("sensResult").textContent = fmt(sens,"C");
+  document.getElementById("sensExplanation").textContent = `${txt}: temperatura equivalente considerando vento e/ou umidade.`;
+
+  // Envia para Google Sheets
+  fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      pagina: "temperatura",
+      resultado: resultText
+    })
+  });
 };
 </script>
