@@ -68,12 +68,10 @@ layout: layout.njk
 <script>
   const ratesBRL = {{ rates | dump | safe }};
 
-  /** Cotação em BRL */
   function toBRL(code){
     return code === "BRL" ? 1 : ratesBRL[code];
   }
 
-  /** Símbolo da moeda */
   function symbol(code){
     const map = {
       BRL:"R$", USDBRL:"US$", EURBRL:"€", ARSBRL:"ARS$",
@@ -83,7 +81,6 @@ layout: layout.njk
     return map[code] || "";
   }
 
-  /** Formata número sempre com 2 casas + separador brasileiro */
   const fmt = n => n.toLocaleString("pt-BR",{minimumFractionDigits:2});
 
   document.getElementById("convert").onclick = () => {
@@ -94,22 +91,29 @@ layout: layout.njk
     const srcRate = toBRL(src);
     const dstRate = toBRL(dst);
 
-    // valor em BRL e valor final
     const brl   = amount * srcRate;
     const final = dst === "BRL" ? brl : brl / dstRate;
 
-    /* ---------- resultado grande --------- */
-    document.getElementById("result").textContent =
-      symbol(dst) + " " + fmt(final);
+    const resultadoFinal = symbol(dst) + " " + fmt(final);
+    document.getElementById("result").textContent = resultadoFinal;
 
-    /* ---------- explicação passo-a-passo --------- */
     const conta =
       `${symbol(src)} ${fmt(amount)} × ${fmt(srcRate)}` +
       (dst !== "BRL" ? ` ÷ ${fmt(dstRate)}` : "") +
-      ` = ${symbol(dst)} ${fmt(final)}`;
+      ` = ${resultadoFinal}`;
 
     document.getElementById("formula").innerHTML =
       `<strong>Fórmula:</strong> ${conta}`;
+
+    // 👇 ENVIA PARA A PLANILHA
+    fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pagina: "moedas",
+        resultado: resultadoFinal
+      })
+    });
   };
 </script>
-
