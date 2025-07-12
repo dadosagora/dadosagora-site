@@ -5,7 +5,6 @@ description: >
 layout: layout.njk
 ---
 
-
 <h2>Conversor de Tempo</h2>
 
 <label for="valor">Valor:</label>
@@ -38,7 +37,6 @@ layout: layout.njk
 <p id="explanation" class="small" style="display:none"></p>
 
 <script>
-  // fatores em relação a 1 segundo
   const factors = { sec: 1, min: 60, hr: 3600, day: 86400 };
 
   const format = n => n.toLocaleString("pt-BR", {
@@ -51,14 +49,25 @@ layout: layout.njk
     const src = document.getElementById("de").value;
     const dst = document.getElementById("para").value;
 
-    // converte → segundos → destino
-    const emSeg   = v * factors[src];
-    const final   = emSeg / factors[dst];
+    const emSeg = v * factors[src];
+    const final = emSeg / factors[dst];
 
-    // exibe
+    const resultadoTexto = `${format(final)} ${dst}`;
+
     document.getElementById("result").textContent = format(final);
     document.getElementById("explanation").style.display = "";
     document.getElementById("explanation").innerHTML =
-      `<strong>Fórmula:</strong> ${format(v)} ${src} × ${factors[src].toLocaleString()} ÷ ${factors[dst].toLocaleString()} = <strong>${format(final)} ${dst}</strong>`;
+      `<strong>Fórmula:</strong> ${format(v)} ${src} × ${factors[src].toLocaleString()} ÷ ${factors[dst].toLocaleString()} = <strong>${resultadoTexto}</strong>`;
+
+    // Envia para o banco de dados (Google Sheets)
+    fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pagina: "tempo",
+        resultado: resultadoTexto
+      })
+    });
   };
 </script>
