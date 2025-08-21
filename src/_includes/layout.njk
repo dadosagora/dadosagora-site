@@ -1,84 +1,67 @@
 {# src/_includes/layout.njk #}
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  {# –– SEO básico –– #}
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GPTGL49PRS"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-GPTGL49PRS');
-  </script>
+    <title>{% if title %}{{ title }} | {% endif %}ConvertePraMim</title>
 
-  {# ———  DESCRIÇÃO dinâmica  ——— #}
-  {% if description %}
-    <meta name="description" content="{{ description | escape }}">
-  {% else %}
-    <meta name="description"
-          content="Converta moedas, temperaturas, distâncias, pesos e volumes rapidamente com o ConvertePraMim.">
-  {% endif %}
+    <!-- SEO dinâmico -->
+    <meta name="description" content="{{ description or 'Converta moedas, temperatura, distância, peso, volume e mais.' }}">
+    <meta property="og:title" content="{{ title or 'ConvertePraMim' }}">
+    <meta property="og:description" content="{{ description or 'Conversores práticos e rápidos online' }}">
+    <meta property="og:image" content="/assets/og-image.png">
+    <meta property="og:url" content="https://convertepramim.com.br">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="/assets/og-image.png">
 
-  {# –– Open Graph –– #}
-  <meta property="og:title"
-        content="{% if title %}{{ title }} | {% endif %}ConvertePraMim">
-  <meta property="og:description"
-        content="{{ description or 'Conversores práticos de moedas, temperatura, distância, peso, volume e mais.' }}">
-  <meta property="og:image" content="/assets/og-image.png">
-  <meta property="og:url"   content="https://convertepramim.com.br">
-  <meta property="og:type"  content="website">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GPTGL49PRS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GPTGL49PRS');
+    </script>
 
-  {# –– Twitter Card –– #}
-  <meta name="twitter:card"        content="summary_large_image">
-  <meta name="twitter:title"
-        content="{% if title %}{{ title }} | {% endif %}ConvertePraMim">
-  <meta name="twitter:description"
-        content="{{ description or 'Converta tudo o que precisa em um só lugar.' }}">
-  <meta name="twitter:image"       content="/assets/og-image.png">
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
 
-  {# –– Estilos –– #}
-  <link rel="stylesheet"
-        href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-  <link rel="stylesheet" href="/assets/styles.css">
+  <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
 
-  <title>{% if title %}{{ title }} | {% endif %}ConvertePraMim</title>
-</head>
+    <header class="bg-white shadow-md sticky top-0 z-50">
+      <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="/" class="text-2xl font-bold text-blue-600">ConvertePraMim</a>
+        <nav>
+          <ul class="flex gap-4 text-sm font-medium text-gray-700">
+            <li><a href="/">Moedas</a></li>
+            <li><a href="/temperatura/">Temperatura</a></li>
+            <li><a href="/distancia/">Distância</a></li>
+            <li><a href="/peso/">Peso</a></li>
+            <li><a href="/volume/">Volume</a></li>
+            <li><a href="/tempo/">Tempo</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-<body class="container">
+    <main class="flex-1 max-w-3xl mx-auto w-full px-4 py-8">
+      {{ content | safe }}
+    </main>
 
-  <header>
-    <h1 style="margin-bottom:.5rem">
-      <a href="/" style="text-decoration:none">ConvertePraMim</a>
-    </h1>
+    <footer class="bg-white border-t mt-12 py-6 text-center text-sm text-gray-500">
+      <div class="max-w-5xl mx-auto">
+        <p>&copy; {{ "now" | date("yyyy") }} ConvertePraMim. Todos os direitos reservados.</p>
+        <p class="mt-2">
+          <a href="/sobre/" class="hover:underline">Sobre</a> · 
+          <a href="/contato/" class="hover:underline">Contato</a> · 
+          <a href="/privacidade/" class="hover:underline">Privacidade</a>
+        </p>
+      </div>
+    </footer>
 
-    <nav>
-      <ul class="menu">
-        <li><a href="/">Moedas</a></li>
-        <li><a href="/temperatura/">Temperatura</a></li>
-        <li><a href="/distancia/">Distância</a></li>
-        <li><a href="/peso/">Peso</a></li>
-        <li><a href="/volume/">Volume</a></li>
-        <li><a href="/tempo/">Tempo</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    {{ content | safe }}
-  </main>
-
-  <footer style="margin-top:3rem; padding-top:1rem; border-top:1px solid #ccc; font-size:0.9rem; text-align:center">
-    <p>
-      <a href="/sobre">Sobre</a> |
-      <a href="/contato">Contato</a> |
-      <a href="/privacidade">Política de Privacidade</a>
-    </p>
-    <p style="color:#777">&copy; {{ "now" | date("yyyy") }} ConvertePraMim</p>
-  </footer>
-
-</body>
+  </body>
 </html>
