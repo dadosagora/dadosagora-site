@@ -1,0 +1,75 @@
+---
+title: Conversor de Tempo
+description: >
+  Converta moedas em tempo real (dólar, euro, bitcoin, peso, libra e mais) com cotações atualizadas minuto a minuto. Ferramentas de conversão de temperatura, distância, peso, volume e tempo — tudo grátis, online e em português.
+layout: layout.njk
+---
+
+<h2>Conversor de Tempo</h2>
+<p>Converta segundos, minutos, horas e dias com praticidade. Ideal para cálculos de jornada, estudos e controle de atividades.</p>
+
+
+<label for="valor">Valor:</label>
+<input id="valor" type="number" step="0.01" min="0" value="1">
+
+<div class="grid">
+  <div>
+    <label for="de">De:</label>
+    <select id="de">
+      <option value="sec">Segundos (s)</option>
+      <option value="min">Minutos (min)</option>
+      <option value="hr">Horas (h)</option>
+      <option value="day">Dias (d)</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="para">Para:</label>
+    <select id="para">
+      <option value="sec">Segundos (s)</option>
+      <option value="min">Minutos (min)</option>
+      <option value="hr">Horas (h)</option>
+      <option value="day">Dias (d)</option>
+    </select>
+  </div>
+</div>
+
+<button id="btnTempo">Converter</button>
+<p id="result">0,00</p>
+<p id="explanation" class="small" style="display:none"></p>
+
+<script>
+  const factors = { sec: 1, min: 60, hr: 3600, day: 86400 };
+
+  const format = n => n.toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4
+  });
+
+  document.getElementById("btnTempo").onclick = () => {
+    const v   = parseFloat(document.getElementById("valor").value || 0);
+    const src = document.getElementById("de").value;
+    const dst = document.getElementById("para").value;
+
+    const emSeg = v * factors[src];
+    const final = emSeg / factors[dst];
+
+    const resultadoTexto = `${format(final)} ${dst}`;
+
+    document.getElementById("result").textContent = format(final);
+    document.getElementById("explanation").style.display = "";
+    document.getElementById("explanation").innerHTML =
+      `<strong>Fórmula:</strong> ${format(v)} ${src} × ${factors[src].toLocaleString()} ÷ ${factors[dst].toLocaleString()} = <strong>${resultadoTexto}</strong>`;
+
+    // Envia para o banco de dados (Google Sheets)
+    fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pagina: "tempo",
+        resultado: resultadoTexto
+      })
+    });
+  };
+</script>

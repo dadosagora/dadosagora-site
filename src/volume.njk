@@ -1,0 +1,77 @@
+---
+title: Conversor de Volume
+description: Converta litros, mililitros, galões e xícaras instantaneamente. Útil para culinária e química.
+layout: layout.njk
+---
+
+<h2>Conversor de Volume</h2>
+<p>Converta litros, mililitros, galões e xícaras de forma rápida e precisa — ideal para receitas, química e medições gerais.</p>
+
+<label for="vValue">Valor:</label>
+<input id="vValue" type="number" step="0.01" min="0" value="1">
+
+<div class="grid">
+  <div>
+    <label for="vFrom">De:</label>
+    <select id="vFrom">
+      <option value="L">Litro (L)</option>
+      <option value="mL">Mililitro (mL)</option>
+      <option value="gal">Galão (gal)</option>
+      <option value="cup">Xícara (cup)</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="vTo">Para:</label>
+    <select id="vTo">
+      <option value="L">Litro (L)</option>
+      <option value="mL">Mililitro (mL)</option>
+      <option value="gal">Galão (gal)</option>
+      <option value="cup">Xícara (cup)</option>
+    </select>
+  </div>
+</div>
+
+<button id="vConvert">Converter</button>
+<p id="vResult" class="bigResult">0,00</p>
+<p id="vExplanation" class="small"></p>
+
+<script>
+  const volRates = {
+    L:   1,
+    mL:  0.001,
+    gal: 3.78541,
+    cup: 0.24
+  };
+
+  const symVol = { L:"L", mL:"mL", gal:"gal", cup:"cup" };
+  const fmt = n => n.toLocaleString("pt-BR",{minimumFractionDigits:2});
+
+  document.getElementById("vConvert").onclick = () => {
+    const val  = parseFloat(document.getElementById("vValue").value||0);
+    const from = document.getElementById("vFrom").value;
+    const to   = document.getElementById("vTo").value;
+
+    const litros = val * volRates[from];
+    const final  = litros / volRates[to];
+
+    const resultadoTexto = fmt(final) + " " + symVol[to];
+    document.getElementById("vResult").textContent = resultadoTexto;
+
+    document.getElementById("vExplanation").innerHTML =
+      `<strong>Fórmula usada:</strong><br>` +
+      `${val} ${symVol[from]} × ${volRates[from]} = ${litros.toFixed(4)} L<br>` +
+      `${litros.toFixed(4)} ÷ ${volRates[to]} = ${final.toFixed(4)} ${symVol[to]}`;
+
+    // Registro no banco de dados
+    fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pagina: "volume",
+        resultado: resultadoTexto
+      })
+    });
+  };
+</script>
