@@ -1,5 +1,5 @@
 {
-  "name": "dadosagora",
+  "name": "dadosagora-site",
   "version": "1.0.0",
   "scripts": {
     "build": "eleventy"
