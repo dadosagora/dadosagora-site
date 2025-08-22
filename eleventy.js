@@ -1,10 +1,9 @@
 module.exports = function (eleventyConfig) {
-  // Copia os assets da pasta src para a saída
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
 
   return {
     dir: {
-      input: "src",        // diz que seus .njk estão em src/
+      input: "src",
       includes: "_includes",
       data: "_data",
       output: "_site",
