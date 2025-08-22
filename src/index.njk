@@ -1,0 +1,119 @@
+---
+title: Conversor de Moedas Online
+description: Converta moedas em tempo real (dólar, euro, bitcoin, peso, libra e mais) com cotações atualizadas minuto a minuto. Ferramentas de conversão de temperatura, distância, peso, volume e tempo — tudo grátis, online e em português.
+layout: layout.njk
+---
+
+<h2>Cotações agora</h2>
+<p>Converta moedas em tempo real: dólar, euro, libra, peso argentino, iene, bitcoin e outras. Ideal para viagens, finanças e estudos.</p>
+
+<ul>
+  <li>Dólar: R$ {{ rates.USDBRL | number(2, "pt-BR") }}</li>
+  <li>Euro: R$ {{ rates.EURBRL | number(2, "pt-BR") }}</li>
+  <li>Peso Argentino: R$ {{ rates.ARSBRL | number(4, "pt-BR") }}</li>
+  <li>Libra: R$ {{ rates.GBPBRL | number(2, "pt-BR") }}</li>
+  <li>Dólar Canadense: R$ {{ rates.CADBRL | number(2, "pt-BR") }}</li>
+  <li>Dólar Australiano: R$ {{ rates.AUDBRL | number(2, "pt-BR") }}</li>
+  <li>Franco Suíço: R$ {{ rates.CHFBRL | number(2, "pt-BR") }}</li>
+  <li>Iene: R$ {{ rates.JPYBRL | number(4, "pt-BR") }}</li>
+  <li>Bitcoin: R$ {{ rates.BTCBRL | number(6, "pt-BR") }}</li>
+</ul>
+<p class="small">Fonte: <a href="https://docs.awesomeapi.com.br/api-de-moedas" target="_blank">AwesomeAPI</a></p>
+
+<h2>Conversor de valores</h2>
+
+<label for="amount">Valor:</label>
+<input id="amount" type="number" step="0.01" min="0" value="100">
+
+<div class="grid">
+  <div>
+    <label for="from">De:</label>
+    <select id="from">
+      <option value="BRL">Real (BRL)</option>
+      <option value="USDBRL">Dólar (USD)</option>
+      <option value="EURBRL">Euro (EUR)</option>
+      <option value="ARSBRL">Peso (ARS)</option>
+      <option value="GBPBRL">Libra (GBP)</option>
+      <option value="CADBRL">Dólar CAD (CAD)</option>
+      <option value="AUDBRL">Dólar AUD (AUD)</option>
+      <option value="CHFBRL">Franco (CHF)</option>
+      <option value="JPYBRL">Iene (JPY)</option>
+      <option value="BTCBRL">Bitcoin (BTC)</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="to">Para:</label>
+    <select id="to">
+      <option value="BRL">Real (BRL)</option>
+      <option value="USDBRL">Dólar (USD)</option>
+      <option value="EURBRL">Euro (EUR)</option>
+      <option value="ARSBRL">Peso (ARS)</option>
+      <option value="GBPBRL">Libra (GBP)</option>
+      <option value="CADBRL">Dólar CAD (CAD)</option>
+      <option value="AUDBRL">Dólar AUD (AUD)</option>
+      <option value="CHFBRL">Franco (CHF)</option>
+      <option value="JPYBRL">Iene (JPY)</option>
+      <option value="BTCBRL">Bitcoin (BTC)</option>
+    </select>
+  </div>
+</div>
+
+<button id="convert">Converter</button>
+
+<!-- resultado e explicação -->
+<p id="result" class="lead">R$ 0,00</p>
+<p id="formula"></p>
+
+<script>
+  const ratesBRL = {{ rates | dump | safe }};
+
+  function toBRL(code){
+    return code === "BRL" ? 1 : ratesBRL[code];
+  }
+
+  function symbol(code){
+    const map = {
+      BRL:"R$", USDBRL:"US$", EURBRL:"€", ARSBRL:"ARS$",
+      GBPBRL:"£",  CADBRL:"C$",  AUDBRL:"A$",  CHFBRL:"CHF",
+      JPYBRL:"¥",  BTCBRL:"₿"
+    };
+    return map[code] || "";
+  }
+
+  const fmt = n => n.toLocaleString("pt-BR",{minimumFractionDigits:2});
+
+  document.getElementById("convert").onclick = () => {
+    const amount = parseFloat(document.getElementById("amount").value || 0);
+    const src    = document.getElementById("from").value;
+    const dst    = document.getElementById("to").value;
+
+    const srcRate = toBRL(src);
+    const dstRate = toBRL(dst);
+
+    const brl   = amount * srcRate;
+    const final = dst === "BRL" ? brl : brl / dstRate;
+
+    const resultadoFinal = symbol(dst) + " " + fmt(final);
+    document.getElementById("result").textContent = resultadoFinal;
+
+    const conta =
+      `${symbol(src)} ${fmt(amount)} × ${fmt(srcRate)}` +
+      (dst !== "BRL" ? ` ÷ ${fmt(dstRate)}` : "") +
+      ` = ${resultadoFinal}`;
+
+    document.getElementById("formula").innerHTML =
+      `<strong>Fórmula:</strong> ${conta}`;
+
+    // 👇 ENVIA PARA A PLANILHA
+    fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pagina: "moedas",
+        resultado: resultadoFinal
+      })
+    });
+  };
+</script>
