@@ -1,75 +1,61 @@
 ---
 title: Conversor de Tempo
-description: >
-  Converta moedas em tempo real (dólar, euro, bitcoin, peso, libra e mais) com cotações atualizadas minuto a minuto. Ferramentas de conversão de temperatura, distância, peso, volume e tempo — tudo grátis, online e em português.
 layout: layout.njk
 ---
 
-<h2>Conversor de Tempo</h2>
-<p>Converta segundos, minutos, horas e dias com praticidade. Ideal para cálculos de jornada, estudos e controle de atividades.</p>
+<h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900">
+  Conversor de Tempo
+</h1>
+<p class="text-center text-gray-600 mt-1">Segundos, minutos, horas e dias.</p>
 
+<section class="mt-8">
+  <label for="timeAmount" class="block text-sm mb-1">Valor:</label>
+  <input id="timeAmount" type="number" step="0.0001" value="60" class="w-full p-3 border border-gray-300 rounded-lg bg-white" />
 
-<label for="valor">Valor:</label>
-<input id="valor" type="number" step="0.01" min="0" value="1">
-
-<div class="grid">
-  <div>
-    <label for="de">De:</label>
-    <select id="de">
-      <option value="sec">Segundos (s)</option>
-      <option value="min">Minutos (min)</option>
-      <option value="hr">Horas (h)</option>
-      <option value="day">Dias (d)</option>
-    </select>
+  <div class="grid mt-3">
+    <div>
+      <label for="timeFrom" class="block text-sm mb-1">De:</label>
+      <select id="timeFrom" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="s">Segundo (s)</option>
+        <option value="min">Minuto (min)</option>
+        <option value="h">Hora (h)</option>
+        <option value="d">Dia (d)</option>
+      </select>
+    </div>
+    <div>
+      <label for="timeTo" class="block text-sm mb-1">Para:</label>
+      <select id="timeTo" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="s">Segundo (s)</option>
+        <option value="min">Minuto (min)</option>
+        <option value="h">Hora (h)</option>
+        <option value="d">Dia (d)</option>
+      </select>
+    </div>
   </div>
 
-  <div>
-    <label for="para">Para:</label>
-    <select id="para">
-      <option value="sec">Segundos (s)</option>
-      <option value="min">Minutos (min)</option>
-      <option value="hr">Horas (h)</option>
-      <option value="day">Dias (d)</option>
-    </select>
+  <div class="mt-3">
+    <button id="timeConvert" type="button" class="btn w-full">Converter</button>
   </div>
-</div>
 
-<button id="btnTempo">Converter</button>
-<p id="result">0,00</p>
-<p id="explanation" class="small" style="display:none"></p>
+  <p id="timeResult" class="bigResult">—</p>
+  <p id="timeFormula"></p>
+</section>
 
 <script>
-  const factors = { sec: 1, min: 60, hr: 3600, day: 86400 };
+  const timeFmt = (n) => Number(n).toLocaleString("pt-BR", {maximumFractionDigits: 6});
+  // fatores para segundos
+  const tFactor = { s:1, min:60, h:3600, d:86400 };
 
-  const format = n => n.toLocaleString("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 4
+  document.getElementById("timeConvert").addEventListener("click", () => {
+    const amount = parseFloat(document.getElementById("timeAmount").value || 0);
+    const from = document.getElementById("timeFrom").value;
+    const to   = document.getElementById("timeTo").value;
+
+    const seconds = amount * tFactor[from];
+    const out = seconds / tFactor[to];
+
+    document.getElementById("timeResult").textContent = timeFmt(out) + " " + to;
+    document.getElementById("timeFormula").innerHTML =
+      `<strong>Fórmula:</strong> ${amount} ${from} × ${tFactor[from]} (s/${from}) ÷ ${tFactor[to]} (s/${to})`;
   });
-
-  document.getElementById("btnTempo").onclick = () => {
-    const v   = parseFloat(document.getElementById("valor").value || 0);
-    const src = document.getElementById("de").value;
-    const dst = document.getElementById("para").value;
-
-    const emSeg = v * factors[src];
-    const final = emSeg / factors[dst];
-
-    const resultadoTexto = `${format(final)} ${dst}`;
-
-    document.getElementById("result").textContent = format(final);
-    document.getElementById("explanation").style.display = "";
-    document.getElementById("explanation").innerHTML =
-      `<strong>Fórmula:</strong> ${format(v)} ${src} × ${factors[src].toLocaleString()} ÷ ${factors[dst].toLocaleString()} = <strong>${resultadoTexto}</strong>`;
-
-    // Envia para o banco de dados (Google Sheets)
-    fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        pagina: "tempo",
-        resultado: resultadoTexto
-      })
-    });
-  };
 </script>
