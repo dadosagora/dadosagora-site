@@ -1,0 +1,54 @@
+---
+title: Conversor Culinário (Volume)
+layout: layout.njk
+---
+
+<h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900">Conversor Culinário</h1>
+<p class="text-center text-gray-600 mt-1">Xícara, colher de sopa, colher de chá, mL e L (medidas padrão).</p>
+
+<section class="mt-8">
+  <label for="cookAmount" class="block text-sm mb-1">Valor:</label>
+  <input id="cookAmount" type="number" step="0.01" value="1" class="w-full p-3 border border-gray-300 rounded-lg bg-white"/>
+
+  <div class="grid mt-3">
+    <div>
+      <label for="cookFrom" class="block text-sm mb-1">De:</label>
+      <select id="cookFrom" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="cup">Xícara (240 mL)</option>
+        <option value="tbsp">Colher de sopa (15 mL)</option>
+        <option value="tsp">Colher de chá (5 mL)</option>
+        <option value="ml">Mililitro (mL)</option>
+        <option value="L">Litro (L)</option>
+      </select>
+    </div>
+    <div>
+      <label for="cookTo" class="block text-sm mb-1">Para:</label>
+      <select id="cookTo" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="cup">Xícara (240 mL)</option>
+        <option value="tbsp">Colher de sopa (15 mL)</option>
+        <option value="tsp">Colher de chá (5 mL)</option>
+        <option value="ml">Mililitro (mL)</option>
+        <option value="L">Litro (L)</option>
+      </select>
+    </div>
+  </div>
+
+  <button id="cookConvert" type="button" class="btn w-full mt-3">Converter</button>
+
+  <p id="cookResult" class="bigResult">—</p>
+  <p id="cookFormula"></p>
+</section>
+
+<script>
+  const cookFmt=(n)=>Number(n).toLocaleString("pt-BR",{maximumFractionDigits:3});
+  // fatores para mL (padrões populares)
+  const C = { cup:240, tbsp:15, tsp:5, ml:1, L:1000 };
+
+  cookConvert.addEventListener("click", ()=>{
+    const val = parseFloat(cookAmount.value||0);
+    const ml  = val * C[cookFrom.value];
+    const out = ml / C[cookTo.value];
+    cookResult.textContent = `${cookFmt(out)} ${cookTo.value}`;
+    cookFormula.innerHTML  = `<strong>Fórmula:</strong> ${val}×${C[cookFrom.value]} (mL/${cookFrom.value}) ÷ ${C[cookTo.value]} (mL/${cookTo.value})`;
+  });
+</script>
