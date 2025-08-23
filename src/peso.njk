@@ -1,79 +1,61 @@
 ---
 title: Conversor de Peso
-description: Converta quilogramas, gramas, libras e onças rapidamente — perfeito para receitas, academia e embarque aéreo.
 layout: layout.njk
 ---
 
-<h2>Conversor de Peso</h2>
-<p>Converta unidades de peso como gramas, quilogramas, libras e onças. Ferramenta útil para cozinha, academia e transporte.</p>
+<h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900">
+  Conversor de Peso
+</h1>
+<p class="text-center text-gray-600 mt-1">Quilos, gramas, libras e onças.</p>
 
-<label for="peso">Valor:</label>
-<input id="peso" type="number" step="0.01" min="0" value="1">
+<section class="mt-8">
+  <label for="pAmount" class="block text-sm mb-1">Valor:</label>
+  <input id="pAmount" type="number" step="0.0001" value="1" class="w-full p-3 border border-gray-300 rounded-lg bg-white" />
 
-<div class="grid">
-  <div>
-    <label for="de">De:</label>
-    <select id="de">
-      <option value="kg">Quilograma (kg)</option>
-      <option value="g">Grama (g)</option>
-      <option value="lb">Libra (lb)</option>
-      <option value="oz">Onça (oz)</option>
-    </select>
+  <div class="grid mt-3">
+    <div>
+      <label for="pFrom" class="block text-sm mb-1">De:</label>
+      <select id="pFrom" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="kg">Quilo (kg)</option>
+        <option value="g">Grama (g)</option>
+        <option value="lb">Libra (lb)</option>
+        <option value="oz">Onça (oz)</option>
+      </select>
+    </div>
+    <div>
+      <label for="pTo" class="block text-sm mb-1">Para:</label>
+      <select id="pTo" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="kg">Quilo (kg)</option>
+        <option value="g">Grama (g)</option>
+        <option value="lb">Libra (lb)</option>
+        <option value="oz">Onça (oz)</option>
+      </select>
+    </div>
   </div>
 
-  <div>
-    <label for="para">Para:</label>
-    <select id="para">
-      <option value="kg">Quilograma (kg)</option>
-      <option value="g">Grama (g)</option>
-      <option value="lb">Libra (lb)</option>
-      <option value="oz">Onça (oz)</option>
-    </select>
+  <div class="mt-3">
+    <button id="pConvert" type="button" class="btn w-full">Converter</button>
   </div>
-</div>
 
-<button id="converter">Converter</button>
-<p id="result">0,00</p>
-
-<div id="explanation"></div>
+  <p id="pResult" class="bigResult">—</p>
+  <p id="pFormula"></p>
+</section>
 
 <script>
-  const taxas = {
-    kg:   1,
-    g:    1000,
-    lb:   2.20462,
-    oz:   35.274
-  };
+  const pFmt = (n) => Number(n).toLocaleString("pt-BR", {maximumFractionDigits: 6});
+  // fatores para kg
+  const pFactor = { kg:1, g:0.001, lb:0.45359237, oz:0.028349523125 };
 
-  document.getElementById("converter").onclick = () => {
-    const valor = parseFloat(document.getElementById("peso").value || 0);
-    const de = document.getElementById("de").value;
-    const para = document.getElementById("para").value;
+  document.getElementById("pConvert").addEventListener("click", () => {
+    const amount = parseFloat(document.getElementById("pAmount").value || 0);
+    const from = document.getElementById("pFrom").value;
+    const to   = document.getElementById("pTo").value;
 
-    const valorEmKg = valor / taxas[de];
-    const resultado = valorEmKg * taxas[para];
+    const kg = amount * pFactor[from];
+    const out = kg / pFactor[to];
 
-    const simbolo = {
-      kg: "kg", g: "g", lb: "lb", oz: "oz"
-    };
-
-    const resultadoFinal = resultado.toLocaleString("pt-BR", { minimumFractionDigits: 2 }) + " " + simbolo[para];
-    document.getElementById("result").textContent = resultadoFinal;
-
-    document.getElementById("explanation").innerHTML = `
-      <strong>Fórmula usada:</strong><br>
-      ${valor} ${simbolo[de]} ÷ ${taxas[de]} × ${taxas[para]} = ${resultado.toFixed(2)} ${simbolo[para]}
-    `;
-
-    // 👇 Envia resultado para o Google Sheets
-    fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        pagina: "peso",
-        resultado: resultadoFinal
-      })
-    });
-  };
+    document.getElementById("pResult").textContent = pFmt(out) + " " + to;
+    document.getElementById("pFormula").innerHTML =
+      `<strong>Fórmula:</strong> ${amount} ${from} × ${pFactor[from]} (kg/${from}) ÷ ${pFactor[to]} (kg/${to})`;
+  });
 </script>
