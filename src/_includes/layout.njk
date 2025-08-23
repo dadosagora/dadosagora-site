@@ -13,6 +13,9 @@
 
   <!-- Fallback inline: garante estilo básico -->
   <style>
+    /* evita scroll horizontal da página */
+    body{ overflow-x:hidden; }
+
     .btn{display:inline-block;width:100%;padding:.75rem 1rem;background:#2563eb;color:#fff;
          font-weight:600;text-align:center;border-radius:.5rem;border:0;cursor:pointer;
          transition:background-color .15s}
@@ -23,8 +26,15 @@
     #result{margin-top:1.5rem;font-size:3rem;font-weight:700;color:#1d4ed8;text-align:center}
     #formula{margin-top:1rem;font-size:.95rem;color:#555;background:#f4f4f4;padding:1rem;
              border-left:4px solid #1d4ed8;border-radius:4px}
+
     /* Nav scroll mobile */
-    .nav-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    .nav-scroll{
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      min-width:0;          /* <— crucial em layout flex */
+      max-width:100%;
+    }
     .nav-scroll::-webkit-scrollbar{display:none;}
     .nav-links{display:inline-flex;gap:.5rem;white-space:nowrap;}
     .nav-links a{display:inline-block;font-size:.95rem;padding:.5rem .75rem;border-radius:9999px;
@@ -44,13 +54,13 @@
 
   <!-- Cabeçalho -->
   <header class="bg-white shadow sticky top-0 z-30">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="{{ '/' | url }}" class="text-2xl sm:text-3xl font-extrabold text-blue-600">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <a href="{{ '/' | url }}" class="text-3xl sm:text-3xl font-extrabold text-blue-600">
         ConvertePraMim
       </a>
 
-      <!-- Nav scrollável no mobile -->
-      <div class="nav-scroll ml-4">
+      <!-- Nav: ocupa 100% no mobile, fica ao lado no desktop -->
+      <div class="nav-scroll w-full sm:w-auto">
         <nav class="nav-links" aria-label="Navegação principal">
           <a href="{{ '/' | url }}">Início (Moedas)</a>
           <a href="{{ '/temperatura/' | url }}">Temperatura e Sensação Térmica</a>
