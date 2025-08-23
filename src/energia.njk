@@ -1,0 +1,54 @@
+---
+title: Conversor de Energia
+layout: layout.njk
+---
+
+<h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900">Conversor de Energia</h1>
+<p class="text-center text-gray-600 mt-1">Joule, caloria, kcal, kWh e BTU.</p>
+
+<section class="mt-8">
+  <label for="eAmount" class="block text-sm mb-1">Valor:</label>
+  <input id="eAmount" type="number" step="0.0001" value="1" class="w-full p-3 border border-gray-300 rounded-lg bg-white"/>
+
+  <div class="grid mt-3">
+    <div>
+      <label for="eFrom" class="block text-sm mb-1">De:</label>
+      <select id="eFrom" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="J">Joule (J)</option>
+        <option value="cal">Caloria (cal)</option>
+        <option value="kcal">Quilocaloria (kcal)</option>
+        <option value="kWh">Quilowatt-hora (kWh)</option>
+        <option value="BTU">BTU</option>
+      </select>
+    </div>
+    <div>
+      <label for="eTo" class="block text-sm mb-1">Para:</label>
+      <select id="eTo" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="J">Joule (J)</option>
+        <option value="cal">Caloria (cal)</option>
+        <option value="kcal">Quilocaloria (kcal)</option>
+        <option value="kWh">Quilowatt-hora (kWh)</option>
+        <option value="BTU">BTU</option>
+      </select>
+    </div>
+  </div>
+
+  <button id="eConvert" type="button" class="btn w-full mt-3">Converter</button>
+
+  <p id="eResult" class="bigResult">—</p>
+  <p id="eFormula"></p>
+</section>
+
+<script>
+  const eFmt=(n)=>Number(n).toLocaleString("pt-BR",{maximumFractionDigits:6});
+  // fatores para Joule
+  const E = { J:1, cal:4.184, kcal:4184, kWh:3.6e6, BTU:1055.05585262 };
+
+  eConvert.addEventListener("click", ()=>{
+    const val = parseFloat(eAmount.value||0);
+    const J   = val * E[eFrom.value];
+    const out = J / E[eTo.value];
+    eResult.textContent = `${eFmt(out)} ${eTo.value}`;
+    eFormula.innerHTML = `<strong>Fórmula:</strong> ${val}×${E[eFrom.value]} (J/${eFrom.value}) ÷ ${E[eTo.value]} (J/${eTo.value})`;
+  });
+</script>
