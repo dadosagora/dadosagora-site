@@ -7,18 +7,18 @@ layout: layout.njk
 <h2>Cotações agora</h2>
 <p>Converta moedas em tempo real: dólar, euro, libra, peso argentino, iene, bitcoin e outras. Ideal para viagens, finanças e estudos.</p>
 
-<ul>
-  <li>Dólar: R$ {{ rates.USDBRL | number(2, "pt-BR") }}</li>
-  <li>Euro: R$ {{ rates.EURBRL | number(2, "pt-BR") }}</li>
-  <li>Peso Argentino: R$ {{ rates.ARSBRL | number(4, "pt-BR") }}</li>
-  <li>Libra: R$ {{ rates.GBPBRL | number(2, "pt-BR") }}</li>
-  <li>Dólar Canadense: R$ {{ rates.CADBRL | number(2, "pt-BR") }}</li>
-  <li>Dólar Australiano: R$ {{ rates.AUDBRL | number(2, "pt-BR") }}</li>
-  <li>Franco Suíço: R$ {{ rates.CHFBRL | number(2, "pt-BR") }}</li>
-  <li>Iene: R$ {{ rates.JPYBRL | number(4, "pt-BR") }}</li>
-  <li>Bitcoin: R$ {{ rates.BTCBRL | number(6, "pt-BR") }}</li>
+<ul id="rates-list">
+  <li>Dólar: R$ <span class="value" data-code="USDBRL" data-decimals="2">carregando…</span></li>
+  <li>Euro: R$ <span class="value" data-code="EURBRL" data-decimals="2">carregando…</span></li>
+  <li>Peso Argentino: R$ <span class="value" data-code="ARSBRL" data-decimals="4">carregando…</span></li>
+  <li>Libra: R$ <span class="value" data-code="GBPBRL" data-decimals="2">carregando…</span></li>
+  <li>Dólar Canadense: R$ <span class="value" data-code="CADBRL" data-decimals="2">carregando…</span></li>
+  <li>Dólar Australiano: R$ <span class="value" data-code="AUDBRL" data-decimals="2">carregando…</span></li>
+  <li>Franco Suíço: R$ <span class="value" data-code="CHFBRL" data-decimals="2">carregando…</span></li>
+  <li>Iene: R$ <span class="value" data-code="JPYBRL" data-decimals="4">carregando…</span></li>
+  <li>Bitcoin: R$ <span class="value" data-code="BTCBRL" data-decimals="6">carregando…</span></li>
 </ul>
-<p class="small">Fonte: <a href="https://docs.awesomeapi.com.br/api-de-moedas" target="_blank">AwesomeAPI</a></p>
+<p class="small">Fonte: <a href="https://docs.awesomeapi.com.br/api-de-moedas" target="_blank" rel="noopener">AwesomeAPI</a></p>
 
 <h2>Conversor de valores</h2>
 
@@ -66,12 +66,16 @@ layout: layout.njk
 <p id="formula"></p>
 
 <script>
+  // Dados carregados pelo Eleventy via _data/rates.js
   const ratesBRL = {{ rates | dump | safe }};
 
-  function toBRL(code){
-    return code === "BRL" ? 1 : ratesBRL[code];
-  }
+  // Formatação numérica padrão pt-BR
+  const fmt = (n, digits = 2) => Number(n).toLocaleString("pt-BR", {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  });
 
+  // Tabela de símbolos
   function symbol(code){
     const map = {
       BRL:"R$", USDBRL:"US$", EURBRL:"€", ARSBRL:"ARS$",
@@ -81,8 +85,22 @@ layout: layout.njk
     return map[code] || "";
   }
 
-  const fmt = n => n.toLocaleString("pt-BR",{minimumFractionDigits:2});
+  // Converte um código para taxa BRL (1 quando é BRL)
+  function toBRL(code){
+    return code === "BRL" ? 1 : Number(ratesBRL[code] ?? 0);
+  }
 
+  // Preenche a lista "Cotações agora" sem usar filtro Nunjucks
+  function renderSpotRates(){
+    document.querySelectorAll('#rates-list .value').forEach(span => {
+      const code = span.getAttribute('data-code');
+      const decimals = Number(span.getAttribute('data-decimals') || 2);
+      const val = toBRL(code);
+      span.textContent = val ? fmt(val, decimals) : '—';
+    });
+  }
+
+  // Conversor
   document.getElementById("convert").onclick = () => {
     const amount = parseFloat(document.getElementById("amount").value || 0);
     const src    = document.getElementById("from").value;
@@ -92,9 +110,9 @@ layout: layout.njk
     const dstRate = toBRL(dst);
 
     const brl   = amount * srcRate;
-    const final = dst === "BRL" ? brl : brl / dstRate;
+    const final = dst === "BRL" ? brl : (dstRate ? brl / dstRate : 0);
 
-    const resultadoFinal = symbol(dst) + " " + fmt(final);
+    const resultadoFinal = `${symbol(dst)} ${fmt(final, dst === "BTCBRL" ? 6 : 2)}`;
     document.getElementById("result").textContent = resultadoFinal;
 
     const conta =
@@ -105,7 +123,7 @@ layout: layout.njk
     document.getElementById("formula").innerHTML =
       `<strong>Fórmula:</strong> ${conta}`;
 
-    // 👇 ENVIA PARA A PLANILHA
+    // 👇 ENVIA PARA A PLANILHA (modo no-cors)
     fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
       method: "POST",
       mode: "no-cors",
@@ -116,4 +134,7 @@ layout: layout.njk
       })
     });
   };
+
+  // Inicializa as cotações visíveis
+  renderSpotRates();
 </script>
