@@ -1,4 +1,4 @@
-// .eleventy.cjs
+// eleventy.js
 module.exports = function (eleventyConfig) {
   // Copia arquivos estáticos (CSS, imagens, JS) de src/assets para _site/assets
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
@@ -10,7 +10,7 @@ module.exports = function (eleventyConfig) {
       data: "_data",
       output: "_site",
     },
-    templateFormats: ["njk", "md", "html", "11ty.js"],
+    templateFormats: ["njk", "html", "md"],
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",
   };
