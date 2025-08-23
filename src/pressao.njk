@@ -1,0 +1,56 @@
+---
+title: Conversor de Pressão
+layout: layout.njk
+---
+
+<h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900">Conversor de Pressão</h1>
+<p class="text-center text-gray-600 mt-1">atm, bar, Pa, kPa, psi e mmHg.</p>
+
+<section class="mt-8">
+  <label for="p2Amount" class="block text-sm mb-1">Valor:</label>
+  <input id="p2Amount" type="number" step="0.0001" value="1" class="w-full p-3 border border-gray-300 rounded-lg bg-white"/>
+
+  <div class="grid mt-3">
+    <div>
+      <label for="p2From" class="block text-sm mb-1">De:</label>
+      <select id="p2From" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="Pa">Pascal (Pa)</option>
+        <option value="kPa">Quilopascal (kPa)</option>
+        <option value="bar">Bar (bar)</option>
+        <option value="atm">Atmosfera (atm)</option>
+        <option value="psi">psi</option>
+        <option value="mmHg">mmHg</option>
+      </select>
+    </div>
+    <div>
+      <label for="p2To" class="block text-sm mb-1">Para:</label>
+      <select id="p2To" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="Pa">Pascal (Pa)</option>
+        <option value="kPa">Quilopascal (kPa)</option>
+        <option value="bar">Bar (bar)</option>
+        <option value="atm">Atmosfera (atm)</option>
+        <option value="psi">psi</option>
+        <option value="mmHg">mmHg</option>
+      </select>
+    </div>
+  </div>
+
+  <button id="p2Convert" type="button" class="btn w-full mt-3">Converter</button>
+
+  <p id="p2Result" class="bigResult">—</p>
+  <p id="p2Formula"></p>
+</section>
+
+<script>
+  const p2Fmt=(n)=>Number(n).toLocaleString("pt-BR",{maximumFractionDigits:6});
+  // fatores para Pascal
+  const P2 = { Pa:1, kPa:1e3, bar:1e5, atm:101325, psi:6894.757293, mmHg:133.322368 };
+
+  p2Convert.addEventListener("click", ()=>{
+    const val = parseFloat(p2Amount.value||0);
+    const Pa  = val * P2[p2From.value];
+    const out = Pa / P2[p2To.value];
+    p2Result.textContent = `${p2Fmt(out)} ${p2To.value}`;
+    p2Formula.innerHTML  = `<strong>Fórmula:</strong> ${val}×${P2[p2From.value]} (Pa/${p2From.value}) ÷ ${P2[p2To.value]} (Pa/${p2To.value})`;
+  });
+</script>
