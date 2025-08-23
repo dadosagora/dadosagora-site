@@ -1,94 +1,61 @@
 ---
 title: Conversor de Distância
-description: Converta metros, quilômetros, milhas, jardas, pés e centímetros com precisão instantânea. Ideal para viagens, corridas e estudos.
 layout: layout.njk
 ---
 
+<h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900">
+  Conversor de Distância
+</h1>
+<p class="text-center text-gray-600 mt-1">Metros, quilômetros, milhas e pés.</p>
 
-<h2>Conversor de Distância</h2>
-<p>Converta metros, quilômetros, milhas, jardas, pés e centímetros com precisão instantânea. Ideal para viagens, corridas e estudos.</p>
+<section class="mt-8">
+  <label for="dAmount" class="block text-sm mb-1">Valor:</label>
+  <input id="dAmount" type="number" step="0.0001" value="1" class="w-full p-3 border border-gray-300 rounded-lg bg-white" />
 
-
-<div class="grid">
-  <div>
-    <label for="distance">Valor:</label>
-    <input id="distance" type="number" step="0.01" min="0" value="1">
+  <div class="grid mt-3">
+    <div>
+      <label for="dFrom" class="block text-sm mb-1">De:</label>
+      <select id="dFrom" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="m">Metro (m)</option>
+        <option value="km">Quilômetro (km)</option>
+        <option value="mi">Milha (mi)</option>
+        <option value="ft">Pé (ft)</option>
+      </select>
+    </div>
+    <div>
+      <label for="dTo" class="block text-sm mb-1">Para:</label>
+      <select id="dTo" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="m">Metro (m)</option>
+        <option value="km">Quilômetro (km)</option>
+        <option value="mi">Milha (mi)</option>
+        <option value="ft">Pé (ft)</option>
+      </select>
+    </div>
   </div>
 
-  <div>
-    <label for="from">De:</label>
-    <select id="from">
-      <option value="km">Quilômetro (km)</option>
-      <option value="m">Metro (m)</option>
-      <option value="cm">Centímetro (cm)</option>
-      <option value="mi">Milha (mi)</option>
-      <option value="yd">Jarda (yd)</option>
-      <option value="ft">Pé (ft)</option>
-    </select>
+  <div class="mt-3">
+    <button id="dConvert" type="button" class="btn w-full">Converter</button>
   </div>
 
-  <div>
-    <label for="to">Para:</label>
-    <select id="to">
-      <option value="km">Quilômetro (km)</option>
-      <option value="m">Metro (m)</option>
-      <option value="cm">Centímetro (cm)</option>
-      <option value="mi">Milha (mi)</option>
-      <option value="yd">Jarda (yd)</option>
-      <option value="ft">Pé (ft)</option>
-    </select>
-  </div>
-</div>
-
-<button id="convert">Converter</button>
-<p id="result">0</p>
-<div id="explanation"></div>
+  <p id="dResult" class="bigResult">—</p>
+  <p id="dFormula"></p>
+</section>
 
 <script>
-  const conversionRates = {
-    km: 1000,
-    m: 1,
-    cm: 0.01,
-    mi: 1609.34,
-    yd: 0.9144,
-    ft: 0.3048
-  };
+  const dFmt = (n) => Number(n).toLocaleString("pt-BR", {maximumFractionDigits: 6});
+  // fatores para metros
+  const dFactor = { m:1, km:1000, mi:1609.344, ft:0.3048 };
 
-  const convertBtn = document.getElementById("convert");
-  const result = document.getElementById("result");
-  const explanation = document.getElementById("explanation");
+  document.getElementById("dConvert").addEventListener("click", () => {
+    const amount = parseFloat(document.getElementById("dAmount").value || 0);
+    const from = document.getElementById("dFrom").value;
+    const to   = document.getElementById("dTo").value;
 
-  convertBtn.onclick = () => {
-    const value = parseFloat(document.getElementById("distance").value);
-    const from = document.getElementById("from").value;
-    const to = document.getElementById("to").value;
+    const meters = amount * dFactor[from];
+    const out = meters / dFactor[to];
 
-    if (isNaN(value)) return;
-
-    const meters = value * conversionRates[from];
-    const final = meters / conversionRates[to];
-
-   const resultadoFinal = final.toLocaleString("pt-BR", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 6
-}) + " " + to;
-
-result.textContent = resultadoFinal;
-
-// Envia o resultado para o Google Sheets
-fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
-  method: "POST",
-  mode: "no-cors",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    pagina: "distancia",
-    resultado: resultadoFinal
-  })
-});
-
-    explanation.innerHTML =
-      `<strong>Fórmula usada:</strong><br>` +
-      `${value} ${from} × ${conversionRates[from]} = ${meters} m<br>` +
-      `${meters} ÷ ${conversionRates[to]} = ${final.toFixed(6)} ${to}`;
-  };
+    document.getElementById("dResult").textContent = dFmt(out) + " " + to;
+    document.getElementById("dFormula").innerHTML =
+      `<strong>Fórmula:</strong> ${amount} ${from} × ${dFactor[from]} (m/${from}) ÷ ${dFactor[to]} (m/${to})`;
+  });
 </script>
