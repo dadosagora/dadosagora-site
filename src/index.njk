@@ -86,8 +86,8 @@ layout: layout.njk
     </div>
   </div>
 
-  <!-- Botão -->
-  <button id="convert" class="btn w-full mt-2">Converter</button>
+  <!-- >>> ESTE É O BOTÃO REAL <<< -->
+  <button id="convert" type="button" class="btn w-full mt-3">Converter</button>
 
   <!-- Resultado e fórmula -->
   <p id="result" class="lead">R$ 0,00</p>
@@ -108,7 +108,7 @@ layout: layout.njk
   }
   const toBRL = code => code === "BRL" ? 1 : Number(ratesBRL[code] ?? 0);
 
-  // Preenche cotações sem filtro nunjucks
+  // Preenche cotações
   (function renderSpotRates(){
     document.querySelectorAll('#rates-list .value').forEach(span => {
       const code = span.getAttribute('data-code');
@@ -118,8 +118,8 @@ layout: layout.njk
     });
   })();
 
-  // Ação do botão
-  document.getElementById("convert").onclick = () => {
+  // Clique do botão
+  document.getElementById("convert").addEventListener("click", () => {
     const amount = parseFloat(document.getElementById("amount").value || 0);
     const src    = document.getElementById("from").value;
     const dst    = document.getElementById("to").value;
@@ -141,13 +141,5 @@ layout: layout.njk
 
     document.getElementById("formula").innerHTML =
       `<strong>Fórmula:</strong> ${conta}`;
-
-    // envio opcional à planilha
-    fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pagina: "moedas", resultado: resultadoFinal })
-    });
-  };
+  });
 </script>
