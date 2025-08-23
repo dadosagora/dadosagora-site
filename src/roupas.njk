@@ -1,0 +1,70 @@
+---
+title: Tamanhos de Calçados (Aproximação)
+layout: layout.njk
+---
+
+<h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900">Tamanhos de Calçados</h1>
+<p class="text-center text-gray-600 mt-1">Conversão aproximada entre EU, US (M/F), UK e BR. Marcas variam — use como referência.</p>
+
+<section class="mt-8">
+  <label for="sAmount" class="block text-sm mb-1">Número:</label>
+  <input id="sAmount" type="number" step="0.5" value="40" class="w-full p-3 border border-gray-300 rounded-lg bg-white"/>
+
+  <div class="grid mt-3">
+    <div>
+      <label for="sFrom" class="block text-sm mb-1">De:</label>
+      <select id="sFrom" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="EU">EU</option>
+        <option value="USM">US (Masculino)</option>
+        <option value="USW">US (Feminino)</option>
+        <option value="UK">UK</option>
+        <option value="BR">BR</option>
+      </select>
+    </div>
+    <div>
+      <label for="sTo" class="block text-sm mb-1">Para:</label>
+      <select id="sTo" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="EU">EU</option>
+        <option value="USM">US (Masculino)</option>
+        <option value="USW">US (Feminino)</option>
+        <option value="UK">UK</option>
+        <option value="BR">BR</option>
+      </select>
+    </div>
+  </div>
+
+  <button id="sConvert" type="button" class="btn w-full mt-3">Converter</button>
+
+  <p id="sResult" class="bigResult">—</p>
+  <p id="sFormula"></p>
+</section>
+
+<script>
+  const sFmt = (n)=>Number(n).toLocaleString("pt-BR",{maximumFractionDigits:1});
+
+  // Aproximações comuns (podem variar entre marcas)
+  // Base: convertemos tudo para EU e depois para o alvo.
+  function toEU(val, from){
+    if(from==="EU")  return val;
+    if(from==="USM") return val + 33;     // ~
+    if(from==="USW") return val + 31.5;   // ~ USW ≈ USM + 1.5
+    if(from==="UK")  return val + 33.5;   // ~
+    if(from==="BR")  return val + 33;     // ~ BR ≈ EU - 33  → EU ≈ BR + 33
+    return val;
+  }
+  function fromEU(eu, to){
+    if(to==="EU")  return eu;
+    if(to==="USM") return eu - 33;
+    if(to==="USW") return eu - 31.5;
+    if(to==="UK")  return eu - 33.5;
+    if(to==="BR")  return eu - 33;
+    return eu;
+  }
+
+  sConvert.addEventListener("click", ()=>{
+    const vEU = toEU(parseFloat(sAmount.value||0), sFrom.value);
+    const out = fromEU(vEU, sTo.value);
+    sResult.textContent = `${sFmt(out)} ${sTo.value}`;
+    sFormula.innerHTML  = `<strong>Observação:</strong> conversão aproximada; verifique guia da marca.`;
+  });
+</script>
