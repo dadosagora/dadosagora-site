@@ -6,12 +6,17 @@ layout: layout.njk
 <h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900">
   Conversor de Temperatura
 </h1>
-<p class="text-center text-gray-600 mt-1">Converta entre °C, °F e K.</p>
+<p class="text-center text-gray-600 mt-1">Converta entre °C, °F e K, e calcule a sensação térmica.</p>
 
 <section class="mt-8">
-  <label for="tAmount" class="block text-sm mb-1">Valor:</label>
-  <input id="tAmount" type="number" step="0.01" value="25" class="w-full p-3 border border-gray-300 rounded-lg bg-white" />
+  <h2 class="text-xl font-bold mb-3">Conversão de unidades</h2>
 
+  <!-- Valor -->
+  <label for="tAmount" class="block text-sm mb-1">Valor:</label>
+  <input id="tAmount" type="number" step="0.01" value="25"
+    class="w-full p-3 border border-gray-300 rounded-lg bg-white" />
+
+  <!-- De / Para -->
   <div class="grid mt-3">
     <div>
       <label for="tFrom" class="block text-sm mb-1">De:</label>
@@ -39,23 +44,41 @@ layout: layout.njk
   <p id="tFormula"></p>
 </section>
 
+<section class="mt-12">
+  <h2 class="text-xl font-bold mb-3">Sensação térmica</h2>
+
+  <label for="realTemp" class="block text-sm mb-1">Temperatura real (°C):</label>
+  <input id="realTemp" type="number" step="0.1" value="30"
+    class="w-full p-3 border border-gray-300 rounded-lg bg-white mb-3" />
+
+  <label for="humidity" class="block text-sm mb-1">Umidade relativa (%):</label>
+  <input id="humidity" type="number" step="1" value="60"
+    class="w-full p-3 border border-gray-300 rounded-lg bg-white mb-3" />
+
+  <label for="wind" class="block text-sm mb-1">Vento (km/h):</label>
+  <input id="wind" type="number" step="0.1" value="10"
+    class="w-full p-3 border border-gray-300 rounded-lg bg-white mb-3" />
+
+  <div class="mt-3">
+    <button id="sConvert" type="button" class="btn w-full">Calcular Sensação</button>
+  </div>
+
+  <p id="sResult" class="bigResult">—</p>
+  <p id="sFormula"></p>
+</section>
+
 <script>
+  // ------------ Conversão de temperatura ------------
   const tFmt = (n) => Number(n).toLocaleString("pt-BR", {maximumFractionDigits: 2});
-
   function toC(val, unit){
-    const v = Number(val);
-    if(unit === "C") return v;
-    if(unit === "F") return (v - 32) * 5/9;
-    if(unit === "K") return v - 273.15;
-    return NaN;
+    if(unit === "C") return val;
+    if(unit === "F") return (val - 32) * 5/9;
+    if(unit === "K") return val - 273.15;
   }
-
   function fromC(valC, unit){
-    const v = Number(valC);
-    if(unit === "C") return v;
-    if(unit === "F") return (v * 9/5) + 32;
-    if(unit === "K") return v + 273.15;
-    return NaN;
+    if(unit === "C") return valC;
+    if(unit === "F") return (valC * 9/5) + 32;
+    if(unit === "K") return valC + 273.15;
   }
 
   document.getElementById("tConvert").addEventListener("click", () => {
@@ -66,13 +89,38 @@ layout: layout.njk
     const c = toC(amount, from);
     const out = fromC(c, to);
 
-    const unitLabel = {C:"°C",F:"°F",K:"K"}[to] || "";
-    document.getElementById("tResult").textContent = `${tFmt(out)} ${unitLabel}`;
-
-    const formula = (from==="F"?"(x−32)×5/9":from==="K"?"x−273,15":"x") + " → " +
-                    (to==="F"?"x×9/5+32":to==="K"?"x+273,15":"x");
+    document.getElementById("tResult").textContent = tFmt(out) + " " + to;
     document.getElementById("tFormula").innerHTML =
-      `<strong>Fórmula:</strong> ${formula.replaceAll(".", ",")}`;
+      `<strong>Fórmula:</strong> ${from} → ${to}`;
+  });
+
+  // ------------ Sensação térmica ------------
+  document.getElementById("sConvert").addEventListener("click", () => {
+    const T = parseFloat(document.getElementById("realTemp").value || 0); // °C
+    const H = parseFloat(document.getElementById("humidity").value || 0); // %
+    const V = parseFloat(document.getElementById("wind").value || 0);     // km/h
+
+    let feelsLike = T;
+    let formula = "";
+
+    if (T >= 27) {
+      // Heat Index (Steadman / NOAA)
+      feelsLike = -8.784695 + 1.61139411*T + 2.338549*H
+                  - 0.14611605*T*H - 0.012308094*T*T
+                  - 0.016424828*H*H + 0.002211732*T*T*H
+                  + 0.00072546*T*H*H - 0.000003582*T*T*H*H;
+      formula = "Heat Index (sensação por calor + umidade)";
+    } else if (T <= 10 && V > 4.8) {
+      // Wind Chill (temperatura aparente pelo vento)
+      const Vms = V / 3.6; // converte km/h -> m/s
+      feelsLike = 13.12 + 0.6215*T - 11.37*Math.pow(Vms,0.16) + 0.3965*T*Math.pow(Vms,0.16);
+      formula = "Wind Chill (sensação por vento)";
+    } else {
+      formula = "Sem correção significativa (temperatura amena)";
+    }
+
+    document.getElementById("sResult").textContent = tFmt(feelsLike) + " °C";
+    document.getElementById("sFormula").innerHTML =
+      `<strong>Modelo usado:</strong> ${formula}`;
   });
 </script>
-
