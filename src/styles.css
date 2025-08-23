@@ -1,8 +1,39 @@
 /* ------------------------  Estilo base do layout  ------------------------ */
 body{
-  font-family:system-ui,sans-serif;
-  margin:0;
-  padding:0;
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* ----------------------  Controles básicos (preflight safe)  ------------- */
+button,
+[role="button"],
+.btn{
+  display: inline-block;
+  background-color: #2563eb; /* blue-600 */
+  color: #fff;
+  padding: 0.5rem 1rem;      /* px-4 py-2 */
+  border: 0;
+  border-radius: 0.5rem;     /* rounded */
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+button:hover,
+[role="button"]:hover,
+.btn:hover{
+  background-color: #1d4ed8; /* blue-700 */
+}
+
+input[type="number"],
+input[type="text"],
+select{
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;   /* gray-300 */
+  border-radius: 0.375rem;     /* rounded-md */
+  background: #fff;
 }
 
 /* ----------------------  Espaçamento em formulários  --------------------- */
@@ -58,4 +89,7 @@ body{
 }
 
 /* Texto auxiliar pequeno */
-.small{font-size:.85rem;color:#555;}
+.small{
+  font-size:.85rem;
+  color:#555;
+}
