@@ -1,0 +1,52 @@
+---
+title: Conversor de Velocidade
+layout: layout.njk
+---
+
+<h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900">Conversor de Velocidade</h1>
+<p class="text-center text-gray-600 mt-1">km/h, m/s, mph e nós.</p>
+
+<section class="mt-8">
+  <label for="vAmount" class="block text-sm mb-1">Valor:</label>
+  <input id="vAmount" type="number" step="0.0001" value="100" class="w-full p-3 border border-gray-300 rounded-lg bg-white"/>
+
+  <div class="grid mt-3">
+    <div>
+      <label for="vFrom" class="block text-sm mb-1">De:</label>
+      <select id="vFrom" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="kmh">Quilômetro por hora (km/h)</option>
+        <option value="ms">Metro por segundo (m/s)</option>
+        <option value="mph">Milha por hora (mph)</option>
+        <option value="kt">Nós (kn)</option>
+      </select>
+    </div>
+    <div>
+      <label for="vTo" class="block text-sm mb-1">Para:</label>
+      <select id="vTo" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="kmh">Quilômetro por hora (km/h)</option>
+        <option value="ms">Metro por segundo (m/s)</option>
+        <option value="mph">Milha por hora (mph)</option>
+        <option value="kt">Nós (kn)</option>
+      </select>
+    </div>
+  </div>
+
+  <button id="vConvert" type="button" class="btn w-full mt-3">Converter</button>
+
+  <p id="vResult" class="bigResult">—</p>
+  <p id="vFormula"></p>
+</section>
+
+<script>
+  const vFmt=(n)=>Number(n).toLocaleString("pt-BR",{maximumFractionDigits:6});
+  // fatores para m/s
+  const V = { ms:1, kmh:0.2777777778, mph:0.44704, kt:0.514444 };
+
+  vConvert.addEventListener("click", ()=>{
+    const val = parseFloat(vAmount.value||0);
+    const ms  = val * V[vFrom.value];
+    const out = ms / V[vTo.value];
+    vResult.textContent = `${vFmt(out)} ${vTo.value}`;
+    vFormula.innerHTML = `<strong>Fórmula:</strong> ${val}×${V[vFrom.value]} (m/s) ÷ ${V[vTo.value]} (m/s)`;
+  });
+</script>
