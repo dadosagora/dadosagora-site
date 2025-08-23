@@ -1,77 +1,61 @@
 ---
 title: Conversor de Volume
-description: Converta litros, mililitros, galões e xícaras instantaneamente. Útil para culinária e química.
 layout: layout.njk
 ---
 
-<h2>Conversor de Volume</h2>
-<p>Converta litros, mililitros, galões e xícaras de forma rápida e precisa — ideal para receitas, química e medições gerais.</p>
+<h1 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900">
+  Conversor de Volume
+</h1>
+<p class="text-center text-gray-600 mt-1">Litros, mililitros, galões (US) e metros cúbicos.</p>
 
-<label for="vValue">Valor:</label>
-<input id="vValue" type="number" step="0.01" min="0" value="1">
+<section class="mt-8">
+  <label for="vAmount" class="block text-sm mb-1">Valor:</label>
+  <input id="vAmount" type="number" step="0.0001" value="1" class="w-full p-3 border border-gray-300 rounded-lg bg-white" />
 
-<div class="grid">
-  <div>
-    <label for="vFrom">De:</label>
-    <select id="vFrom">
-      <option value="L">Litro (L)</option>
-      <option value="mL">Mililitro (mL)</option>
-      <option value="gal">Galão (gal)</option>
-      <option value="cup">Xícara (cup)</option>
-    </select>
+  <div class="grid mt-3">
+    <div>
+      <label for="vFrom" class="block text-sm mb-1">De:</label>
+      <select id="vFrom" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="L">Litro (L)</option>
+        <option value="mL">Mililitro (mL)</option>
+        <option value="galUS">Galão (US)</option>
+        <option value="m3">Metro cúbico (m³)</option>
+      </select>
+    </div>
+    <div>
+      <label for="vTo" class="block text-sm mb-1">Para:</label>
+      <select id="vTo" class="w-full p-3 border border-gray-300 rounded-lg bg-white">
+        <option value="L">Litro (L)</option>
+        <option value="mL">Mililitro (mL)</option>
+        <option value="galUS">Galão (US)</option>
+        <option value="m3">Metro cúbico (m³)</option>
+      </select>
+    </div>
   </div>
 
-  <div>
-    <label for="vTo">Para:</label>
-    <select id="vTo">
-      <option value="L">Litro (L)</option>
-      <option value="mL">Mililitro (mL)</option>
-      <option value="gal">Galão (gal)</option>
-      <option value="cup">Xícara (cup)</option>
-    </select>
+  <div class="mt-3">
+    <button id="vConvert" type="button" class="btn w-full">Converter</button>
   </div>
-</div>
 
-<button id="vConvert">Converter</button>
-<p id="vResult" class="bigResult">0,00</p>
-<p id="vExplanation" class="small"></p>
+  <p id="vResult" class="bigResult">—</p>
+  <p id="vFormula"></p>
+</section>
 
 <script>
-  const volRates = {
-    L:   1,
-    mL:  0.001,
-    gal: 3.78541,
-    cup: 0.24
-  };
+  const vFmt = (n) => Number(n).toLocaleString("pt-BR", {maximumFractionDigits: 6});
+  // fatores para litros
+  const vFactor = { L:1, mL:0.001, galUS:3.785411784, m3:1000 };
 
-  const symVol = { L:"L", mL:"mL", gal:"gal", cup:"cup" };
-  const fmt = n => n.toLocaleString("pt-BR",{minimumFractionDigits:2});
-
-  document.getElementById("vConvert").onclick = () => {
-    const val  = parseFloat(document.getElementById("vValue").value||0);
+  document.getElementById("vConvert").addEventListener("click", () => {
+    const amount = parseFloat(document.getElementById("vAmount").value || 0);
     const from = document.getElementById("vFrom").value;
     const to   = document.getElementById("vTo").value;
 
-    const litros = val * volRates[from];
-    const final  = litros / volRates[to];
+    const liters = amount * vFactor[from];
+    const out = liters / vFactor[to];
 
-    const resultadoTexto = fmt(final) + " " + symVol[to];
-    document.getElementById("vResult").textContent = resultadoTexto;
-
-    document.getElementById("vExplanation").innerHTML =
-      `<strong>Fórmula usada:</strong><br>` +
-      `${val} ${symVol[from]} × ${volRates[from]} = ${litros.toFixed(4)} L<br>` +
-      `${litros.toFixed(4)} ÷ ${volRates[to]} = ${final.toFixed(4)} ${symVol[to]}`;
-
-    // Registro no banco de dados
-    fetch("https://script.google.com/macros/s/AKfycbxvwWDoKH-9UrdA4cQTyxJAfOl9eTT8UOKLv2UCIdPyHKbf-QPSCe5XfrABcFH5cHU/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        pagina: "volume",
-        resultado: resultadoTexto
-      })
-    });
-  };
+    document.getElementById("vResult").textContent = vFmt(out) + " " + to;
+    document.getElementById("vFormula").innerHTML =
+      `<strong>Fórmula:</strong> ${amount} ${from} × ${vFactor[from]} (L/${from}) ÷ ${vFactor[to]} (L/${to})`;
+  });
 </script>
