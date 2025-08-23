@@ -11,11 +11,12 @@
   <!-- CSS global publicado via passthrough: src/assets -> /assets -->
   <link rel="stylesheet" href="{{ '/assets/styles.css' | url }}">
 
-  <!-- Fallback inline: garante estilo básico -->
+  <!-- Fallback + melhorias de navegação (mobile-first) -->
   <style>
     /* evita scroll horizontal da página */
     body{ overflow-x:hidden; }
 
+    /* Controles básicos */
     .btn{display:inline-block;width:100%;padding:.75rem 1rem;background:#2563eb;color:#fff;
          font-weight:600;text-align:center;border-radius:.5rem;border:0;cursor:pointer;
          transition:background-color .15s}
@@ -27,26 +28,40 @@
     #formula{margin-top:1rem;font-size:.95rem;color:#555;background:#f4f4f4;padding:1rem;
              border-left:4px solid #1d4ed8;border-radius:4px}
 
-    /* Nav scroll mobile */
+    /* Nav scrollável no mobile, com pílulas e "fade" nas bordas */
+    .nav-wrap{ position: relative; }
     .nav-scroll{
-      overflow-x:auto;
-      -webkit-overflow-scrolling:touch;
-      scrollbar-width:none;
-      min-width:0;          /* <— crucial em layout flex */
-      max-width:100%;
+      overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+      min-width:0; max-width:100%;
     }
-    .nav-scroll::-webkit-scrollbar{display:none;}
-    .nav-links{display:inline-flex;gap:.5rem;white-space:nowrap;}
-    .nav-links a{display:inline-block;font-size:.95rem;padding:.5rem .75rem;border-radius:9999px;
-      background:#f1f5f9;color:#334155;text-decoration:none;
-      transition:background-color .15s ease,color .15s ease,transform .05s ease;}
-    .nav-links a:hover{background:#e2e8f0;color:#1d4ed8;}
-    .nav-links a:active{transform:scale(.98);}
+    .nav-scroll::-webkit-scrollbar{ display:none; }
+    .nav-wrap::before,.nav-wrap::after{
+      content:""; position:absolute; top:0; bottom:0; width:28px; pointer-events:none;
+    }
+    .nav-wrap::before{ left:0;  background:linear-gradient(90deg,#fff 0,rgba(255,255,255,0)); }
+    .nav-wrap::after{  right:0; background:linear-gradient(270deg,#fff 0,rgba(255,255,255,0)); }
+
+    .nav-links{ display:inline-flex; gap:.5rem; white-space:nowrap; }
+    .nav-links a{
+      display:inline-block; padding:.5rem .75rem; border-radius:9999px;
+      background:#f1f5f9; color:#334155; text-decoration:none;
+      transition:background-color .15s ease,color .15s ease,transform .05s ease;
+      font-size:.95rem;
+    }
+    .nav-links a:hover{ background:#e2e8f0; color:#1d4ed8; }
+    .nav-links a:active{ transform:scale(.98); }
+
+    /* Estado ativo */
+    .nav-links a.nav-pill.is-active{
+      background:#dbeafe; color:#1d4ed8; box-shadow: inset 0 0 0 1px #93c5fd;
+    }
+
+    /* Desktop refinado */
     @media(min-width:1024px){
-      .nav-scroll{overflow:visible;}
-      .nav-links{gap:.75rem;flex-wrap:wrap;}
-      .nav-links a{background:transparent;padding:.25rem .25rem;border-radius:.5rem;}
-      .nav-links a:hover{background:#f1f5f9;}
+      .nav-wrap::before,.nav-wrap::after{ display:none; }
+      .nav-links{ gap:.75rem; flex-wrap:wrap; }
+      .nav-links a{ background:transparent; padding:.25rem .25rem; border-radius:.5rem; }
+      .nav-links a:hover{ background:#f1f5f9; }
     }
   </style>
 </head>
@@ -59,25 +74,57 @@
         ConvertePraMim
       </a>
 
-      <!-- Nav: ocupa 100% no mobile, fica ao lado no desktop -->
-      <div class="nav-scroll w-full sm:w-auto">
-        <nav class="nav-links" aria-label="Navegação principal">
-          <a href="{{ '/' | url }}">Início (Moedas)</a>
-          <a href="{{ '/temperatura/' | url }}">Temperatura e Sensação Térmica</a>
-          <a href="{{ '/distancia/'   | url }}">Distância</a>
-          <a href="{{ '/peso/'        | url }}">Peso</a>
-          <a href="{{ '/volume/'      | url }}">Volume</a>
-          <a href="{{ '/tempo/'       | url }}">Tempo</a>
-          <a href="{{ '/area/'        | url }}">Área</a>
-          <a href="{{ '/velocidade/'  | url }}">Velocidade</a>
-          <a href="{{ '/energia/'     | url }}">Energia</a>
-          <a href="{{ '/combustivel/' | url }}">Combustível</a>
-          <a href="{{ '/culinaria/'   | url }}">Culinária</a>
-          <a href="{{ '/roupas/'      | url }}">Roupas/Calçados</a>
-          <a href="{{ '/dados/'       | url }}">Dados Digitais</a>
-          <a href="{{ '/pressao/'     | url }}">Pressão</a>
-          <a href="{{ '/angulo/'      | url }}">Ângulo</a>
-        </nav>
+      <!-- Nav: ocupa 100% no mobile, rola horizontalmente se precisar -->
+      <div class="nav-wrap w-full sm:w-auto">
+        <div class="nav-scroll">
+          <nav class="nav-links" aria-label="Navegação principal">
+            <a href="{{ '/' | url }}"
+               class="nav-pill {% if page.url == '/' %}is-active{% endif %}">Início (Moedas)</a>
+
+            <a href="{{ '/temperatura/' | url }}"
+               class="nav-pill {% if page.url == '/temperatura/' %}is-active{% endif %}">Temperatura e Sensação Térmica</a>
+
+            <a href="{{ '/distancia/' | url }}"
+               class="nav-pill {% if page.url == '/distancia/' %}is-active{% endif %}">Distância</a>
+
+            <a href="{{ '/peso/' | url }}"
+               class="nav-pill {% if page.url == '/peso/' %}is-active{% endif %}">Peso</a>
+
+            <a href="{{ '/volume/' | url }}"
+               class="nav-pill {% if page.url == '/volume/' %}is-active{% endif %}">Volume</a>
+
+            <a href="{{ '/tempo/' | url }}"
+               class="nav-pill {% if page.url == '/tempo/' %}is-active{% endif %}">Tempo</a>
+
+            <!-- Novos -->
+            <a href="{{ '/area/' | url }}"
+               class="nav-pill {% if page.url == '/area/' %}is-active{% endif %}">Área</a>
+
+            <a href="{{ '/velocidade/' | url }}"
+               class="nav-pill {% if page.url == '/velocidade/' %}is-active{% endif %}">Velocidade</a>
+
+            <a href="{{ '/energia/' | url }}"
+               class="nav-pill {% if page.url == '/energia/' %}is-active{% endif %}">Energia</a>
+
+            <a href="{{ '/combustivel/' | url }}"
+               class="nav-pill {% if page.url == '/combustivel/' %}is-active{% endif %}">Combustível</a>
+
+            <a href="{{ '/culinaria/' | url }}"
+               class="nav-pill {% if page.url == '/culinaria/' %}is-active{% endif %}">Culinária</a>
+
+            <a href="{{ '/roupas/' | url }}"
+               class="nav-pill {% if page.url == '/roupas/' %}is-active{% endif %}">Roupas/Calçados</a>
+
+            <a href="{{ '/dados/' | url }}"
+               class="nav-pill {% if page.url == '/dados/' %}is-active{% endif %}">Dados Digitais</a>
+
+            <a href="{{ '/pressao/' | url }}"
+               class="nav-pill {% if page.url == '/pressao/' %}is-active{% endif %}">Pressão</a>
+
+            <a href="{{ '/angulo/' | url }}"
+               class="nav-pill {% if page.url == '/angulo/' %}is-active{% endif %}">Ângulo</a>
+          </nav>
+        </div>
       </div>
     </div>
   </header>
